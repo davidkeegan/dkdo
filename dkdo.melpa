@@ -1,0 +1,3 @@
+(dkdo
+ :fetcher git
+ :url "/home/dk/Repos/elisp/dkdo")
