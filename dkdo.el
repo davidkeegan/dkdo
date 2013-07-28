@@ -74,7 +74,7 @@ subtasks, the components are tightly integrated into the task."
   (dkdo-BufferRefresh)
   (if (buffer-modified-p) (basic-save-buffer)))
  (dkdo-RefreshTimerStart)
- (beginning-of-buffer)
+ (goto-char (point-min))
 
  ; DkTbd: Mode keys for shift to section.
  (define-key dkdo-mode-map "\C-c\C-xd" 'dkdo-TaskToDone)
