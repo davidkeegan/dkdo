@@ -1,4 +1,4 @@
-; Do mode for todo files.
+; Do mode for do list.
 ; (c) David Keegan 2010.
 (require 'dkmisc)
 
