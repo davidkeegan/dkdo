@@ -307,7 +307,7 @@ Ensures all necessary sections are present."
    ((Moved (dkdo-LaterTasksDueToNow)))
    (if (> Moved 0)
     (progn
-     (dkBeep) 
+     (dkmisc-Beep) 
      (message "Found %d Task(s) due." Moved)))
    (or NoFixAppearance (dkdo-BufferFixAppearance)))))
 
