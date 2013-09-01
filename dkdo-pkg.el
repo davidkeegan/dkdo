@@ -1,3 +1,3 @@
 (define-package "dkdo" "0.3"
  "Do List using some features of org-mode."
- '((dkmisc "0.3") (org "8.0")))
+ '((dkmisc "0.3") (org "20130826")))
