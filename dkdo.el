@@ -16,8 +16,8 @@
 
 (defun dkdo-EditDolist(PrefixArg)
 "Prepares to edit a dolist.
-With a prefix argument, prompts for the filename, and visits it.
- Otherwise visits dknFilename unless already in a notebook."
+ With a prefix argument, prompts for the filename, and visits it.
+ Otherwise visits dkdo-Filename unless already in a dolist"
 (interactive "P")
 (if PrefixArg
  (call-interactively 'find-file)
@@ -83,7 +83,6 @@ subtasks, the components are tightly integrated into the task."
  (dkdo-RefreshTimerStart)
  (goto-char (point-min))
 
- ; DkTbd: Mode keys for shift to section.
  (define-key dkdo-mode-map "\C-c\C-xd" 'dkdo-TaskToDone)
  (define-key dkdo-mode-map "\C-c\C-xl" 'dkdo-TaskToLater)
  (define-key dkdo-mode-map "\C-c\C-xn" 'dkdo-TaskToNow)
