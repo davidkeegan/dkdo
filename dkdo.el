@@ -1,5 +1,5 @@
 ; Do mode for do list.
-; (c) David Keegan 2010.
+; (c) David Keegan 2010-2013.
 (require 'dkmisc)
 
 (defvar dkdo-Filename "~/dk.do" "The dolist file name.")
