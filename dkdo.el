@@ -23,6 +23,8 @@ With a prefix argument, prompts for the filename, and visits it.
   (buffer-file-name)
   (string-match "\\.do$" (buffer-file-name))))
 
+(defvar org-cycle-separator-lines)
+
 (define-derived-mode dkdo-mode org-mode "Do List Mode"
 "A do file has top-level Sections NOW, LATER, and DONE. Each
 second-level header within a section is a task. A third-level
