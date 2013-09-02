@@ -2,6 +2,13 @@
 ; (c) David Keegan 2010-2013.
 (require 'dkmisc)
 
+; Eliminate compile warnings.
+(defvar org-cycle-separator-lines)
+(declare-function org-sort-entries "org")
+(declare-function org-content "org")
+(declare-function org-cycle-show-empty-lines "org")
+(declare-function hide-subtree "outline")
+
 (defvar dkdo-Filename "~/dk.do" "The dolist file name.")
 
 (defconst dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
@@ -22,8 +29,6 @@ With a prefix argument, prompts for the filename, and visits it.
  (and
   (buffer-file-name)
   (string-match "\\.do$" (buffer-file-name))))
-
-(defvar org-cycle-separator-lines)
 
 (define-derived-mode dkdo-mode org-mode "Do List Mode"
 "A do file has top-level Sections NOW, LATER, and DONE. Each
