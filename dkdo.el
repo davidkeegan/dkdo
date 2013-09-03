@@ -111,7 +111,7 @@ For more information see:
  (interactive)
  (describe-function 'dkdo))
 
-(defconst dkdo-mode-hook nil
+(defvar dkdo-mode-hook nil
 "Hooks called on entering Do List mode.")
 
 (defconst dkdo-Sections
