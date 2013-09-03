@@ -9,12 +9,24 @@
 (declare-function org-cycle-show-empty-lines "org")
 (declare-function hide-subtree "outline")
 
-(defvar dkdo-Filename "~/dk.do" "The dolist file name.")
+(defvar dkdo-Filename nil
+ "The default dolist file name for dkdo-Edit.")
 
 (defconst dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
  "Date plus hours and minutes (no seconds).")
 
-(defun dkdo-EditDolist(PrefixArg)
+;;;###autoload
+(defun dkdo-SetCcKeys()
+ "Defines C-cx keys for dkdo-mode.
+  To invoke add this function to dkdo-mode-hook."
+ (define-key dkdo-mode-map "\C-cd" 'dkdo-TaskToDone)
+ (define-key dkdo-mode-map "\C-cl" 'dkdo-TaskToLater)
+ (define-key dkdo-mode-map "\C-cn" 'dkdo-TaskToNow)
+ (define-key dkdo-mode-map "\C-cr" 'dkdo-BufferRefresh)
+ (define-key dkdo-mode-map "\C-cs" 'dkdo-TaskStart))
+
+;;;###autoload
+(defun dkdo-Edit(PrefixArg)
 "Prepares to edit a dolist.
  With a prefix argument, prompts for the filename, and visits it.
  Otherwise visits dkdo-Filename unless already in a dolist"
@@ -30,6 +42,7 @@
   (buffer-file-name)
   (string-match "\\.do$" (buffer-file-name))))
 
+;;;###autoload
 (define-derived-mode dkdo-mode org-mode "Do List Mode"
 "A do file has top-level Sections NOW, LATER, and DONE. Each
 second-level header within a section is a task. A third-level
