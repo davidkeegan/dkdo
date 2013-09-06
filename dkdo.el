@@ -1,5 +1,16 @@
-; Do mode for do list.
-; (c) David Keegan 2010-2013.
+;;; dkdo.el --- Do List mode using some features of org-mode.
+;; (c) David Keegan 2010-2013.
+
+;;; Commentary:
+;;
+;; This is a do list mode for a user who needs to manipulate the
+;; entries directly to adjust priorities. It uses org/outline mode to
+;; make it easy to get an overview. Urgent tasks appear near the top
+;; of the file, and can be made to move automatically to the top of
+;; the file when they become due.
+;; 
+;;; Code:
+
 (require 'dkmisc)
 
 ; Eliminate compile warnings.
@@ -452,8 +463,8 @@ Returns the final position."
      (let*
       ((NewSeconds (dkdo-TaskTimestampApplyRepeater)))
       (if NewSeconds
-       (dkdo-TaskMoveTo (dkdo-SectionFindInsertPoint 'dkdo-Later NewSeconds))))))
-
+       (dkdo-TaskMoveTo
+        (dkdo-SectionFindInsertPoint 'dkdo-Later NewSeconds))))))
    Destination)))
 
 (defun dkdo-PromoteIfSubtask()
