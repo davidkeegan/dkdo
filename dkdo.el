@@ -1,7 +1,7 @@
 ;;; dkdo.el --- Do List mode using some features of org-mode.
-;; Copyright: (c) David Keegan 2010-2013.
-;; Licence: GPLv3 (FSF) see LICENCE.txt.
 
+;; Copyright: (c) David Keegan 2010-2013.
+;; Licence: FSF GPLv3 see LICENCE.txt.
 ;; Author: David Keegan <dksw@eircom.net>
 ;; Version: See dkdo-pkg.el.
 ;; Keywords: dolist task
