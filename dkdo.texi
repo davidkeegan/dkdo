@@ -16,9 +16,9 @@ May be redistributed under the terms of the Free Software
 Foundation GNU Free Documentation Licence.
 @end copying
 
-@dircategory Major Modes
+@dircategory Emacs misc features
 @direntry
-* Do List Mode: (dkdo).           Command-Line Accounting
+* Do List Mode: (dkdo).           Do List Editing Mode
 @end direntry
 
 @documentencoding UTF-8
