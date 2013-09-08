@@ -1,4 +1,4 @@
 (dkdo
  :fetcher github
  :repo "davidkeegan/dkdo"
- :files ("*.el" "*.info" "dir" "LICENCE.*" "README.md"))
+ :files ("*.el" "*.texi" "dir" "LICENCE.*"))
