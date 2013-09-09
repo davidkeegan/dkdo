@@ -36,8 +36,8 @@
 
 ;;;###autoload
 (defun dkdo-SetCcKeys()
- "Defines C-cx keys for dkdo-mode.
-  To invoke add this function to dkdo-mode-hook."
+ "Define C-cx keys for dkdo-mode.
+To invoke add this function to dkdo-mode-hook."
  (define-key dkdo-mode-map "\C-cd" 'dkdo-TaskToDone)
  (define-key dkdo-mode-map "\C-cl" 'dkdo-TaskToLater)
  (define-key dkdo-mode-map "\C-cn" 'dkdo-TaskToNow)
@@ -46,9 +46,9 @@
 
 ;;;###autoload
 (defun dkdo-Edit(PrefixArg)
-"Prepares to edit a dolist.
- With a prefix argument, prompts for the filename, and visits it.
- Otherwise visits dkdo-Filename unless already in a dolist"
+"Prepare to edit a dolist.
+With a prefix argument, prompts for the filename, and visits it.
+Otherwise visits dkdo-Filename unless already in a dolist"
 (interactive "P")
 (if PrefixArg
  (call-interactively 'find-file)
@@ -56,18 +56,18 @@
   (find-file dkdo-Filename))))
 
 (defun dkdo-InDolist()
-"Returns t if current file is a dolist."
+"Return t if current file is a dolist."
  (and
   (buffer-file-name)
   (string-match "\\.do$" (buffer-file-name))))
 
 ;;;###autoload
 (define-derived-mode dkdo-mode org-mode "Do List Mode"
-"A do file has top-level Sections NOW, LATER, and DONE. Each
-second-level header within a section is a task. A third-level
-header within a task is a subtask. The task/subtask content
-starts immediately after the header prefix and includes the
-remainder of the header and any content, including any lower
+ "A do file has top-level Sections NOW, LATER, and DONE.
+Each second-level header within a section is a task. A
+third-level header within a task is a subtask. The task/subtask
+content starts immediately after the header prefix and includes
+the remainder of the header and any content, including any lower
 level sections (which are not significant to this mode).
 
 Dated tasks start life in LATER, other tasks in NOW. Tasks are
@@ -121,16 +121,8 @@ subtasks, the components are tightly integrated into the task."
  (define-key dkdo-mode-map "\C-c\C-xr" 'dkdo-BufferRefresh)
  (define-key dkdo-mode-map "\C-c\C-xs" 'dkdo-TaskStart))
 
-(defun dkdo()
-"Package implementing Do List Mode.
-
-For more information see:
- `dkdo-mode'"
- (interactive)
- (describe-function 'dkdo))
-
 (defvar dkdo-mode-hook nil
-"Hooks called on entering Do List mode.")
+ "Hooks called on entering Do List mode.")
 
 (defconst dkdo-Sections
  '((dkdo-Now . "NOW")
@@ -139,7 +131,7 @@ For more information see:
  "Do List section symbols/name association.")
 
 (defun dkdo-SectionKeys()
-"Returns a list containing the keys of dkdo-Sections."
+ "Returns a list containing the keys of dkdo-Sections."
  (let*
   ((Rv nil))
   (dolist (Elem dkdo-Sections)
@@ -147,36 +139,35 @@ For more information see:
   (reverse Rv)))
 
 (defun dkdo-SectionText(Key)
-"Returns the Section Header text for symbol Key"
+ "Returns the Section Header text for symbol Key"
  (or
   (cdr (assq Key dkdo-Sections))
   "<none>"))
 
 (defun dkdo-SectionSymbol(SectionText)
-"Returns the symbol corresponding to SectionText.
-Returns nil if unsupported section."
+ "Return the symbol corresponding to SectionText.
+Return nil if unsupported section."
  (or
   (car (rassoc SectionText dkdo-Sections))))
 
 (defun dkdo-InSection(Section)
-"Returns t if point is in Section."
+ "Returns t if point is in Section."
  (eq (dkdo-SectionCurrent) Section))
 
 (defconst dkdo-AutoFinishCheckedTasks nil
-"If t tasks with checkboxes are auto-finished from NOW when
-all boxes are checked.")
+ "If t auto-finish tasks with checkboxes from NOW.")
 
 (defconst dkdo-SectionHeaderPrefix "* ")
 (defconst dkdo-SectionHeaderSuffix ":")
 
 (defconst dkdo-SectionHeaderRe (concat "^\\" dkdo-SectionHeaderPrefix)
-"Start of a section header. Use function of same name.")
+ "Start of a section header. Use function of same name.")
 
 (defconst dkdo-ReHeadingTextAny "[^ 	\n]"
-"First character of valid section header text.")
+ "First character of valid section header text.")
 
 (defconst dkdo-ReHeading "^[*]\\{1,3\\} "
-"Only outline levels 1, 2, and 3 are significant.")
+ "Only outline levels 1, 2, and 3 are significant.")
 
 (defconst dkdo-PrefixTask "** ")
 (defconst dkdo-ReTask "^\\*\\* ")
@@ -184,26 +175,26 @@ all boxes are checked.")
 (defconst dkdo-ReSubtask "^\\*\\*\\* ")
 
 (defun dkdo-SectionHeader(Key)
-"Returns the full section header for Key."
+ "Returns the full section header for Key."
  (concat dkdo-SectionHeaderPrefix (dkdo-SectionText Key)
   dkdo-SectionHeaderSuffix))
 
 (defun dkdo-SectionHeaderRe(&optional Key)
-"Returns a section header regex for Key.
- If Key is nil, matches any non-empty section header."
+ "Returns a section header regex for Key.
+If Key is nil, matches any non-empty section header."
  (concat dkdo-SectionHeaderRe
   (if Key (dkdo-SectionHeader Key) dkdo-ReHeadingTextAny)))
 
 (defun dkdo-SectionPresent(Key)
-"Returns the position of the section, or nil if it is not present."
+ "Returns the position of the section, or nil if it is not present."
  (save-excursion
   (dkdo-SectionTo Key t)))
 
 (defun dkdo-SectionTo(&optional Key NoError)
- "Moves to the start of section Key. If Key is nil, moves to the
- start of the current section. Section start is beginning of
- header line. Returns the target buffer position, or nil if
- section not found."
+ "Move to the start of section Key.
+If Key is nil, moves to the start of the current section. Section
+start is beginning of header line. Returns the target buffer
+position, or nil if section not found."
  (let*
   ((Re (dkdo-SectionHeaderRe Key))
    (Target (point)))
@@ -232,7 +223,7 @@ all boxes are checked.")
   Target))
 
 (defun dkdo-SectionToEnd(&optional Key NoError)
-"Moves to the just after the end of section Key.
+ "Moves to the just after the end of section Key.
 If Key is nil, moves to the end of the current section. Note this
 is may be at the start of the next section which is in the next
 section. However trailing empty lines are NOT included in the
@@ -250,22 +241,22 @@ section not found."
  (point))
 
 (defun dkdo-SectionCurrent()
-"Returns the symbol for the current section, or nil if none."
-(save-excursion
- (dkdo-SectionTo nil t)
- (if (not (looking-at (dkdo-SectionHeaderRe)))
-  nil
-  (let*
-   ((Start (re-search-forward dkdo-SectionHeaderPrefix))
-    (End
-     (progn
-      (re-search-forward dkdo-SectionHeaderSuffix)
-      (re-search-backward dkdo-SectionHeaderSuffix)))
-    (Text (buffer-substring Start End)))
-   (or (dkdo-SectionSymbol Text) Text)))))
+ "Returns the symbol for the current section, or nil if none."
+ (save-excursion
+  (dkdo-SectionTo nil t)
+  (if (not (looking-at (dkdo-SectionHeaderRe)))
+   nil
+   (let*
+    ((Start (re-search-forward dkdo-SectionHeaderPrefix))
+     (End
+      (progn
+       (re-search-forward dkdo-SectionHeaderSuffix)
+       (re-search-backward dkdo-SectionHeaderSuffix)))
+     (Text (buffer-substring Start End)))
+    (or (dkdo-SectionSymbol Text) Text)))))
 
 (defun dkdo-SectionSortMaybe(&optional Section)
-"Sorts Section (default current), but only if appropriate.
+ "Sorts Section (default current), but only if appropriate.
 NOTE: This should be avoided as it seems to mess up undo."
  (save-excursion
   (and Section (dkdo-SectionTo Section))
@@ -281,20 +272,20 @@ NOTE: This should be avoided as it seems to mess up undo."
   (dkdo-BufferFixAppearance)))
 
 (defun dkdo-SectionForeach(Function &optional SkipMissing)
-"Applies Function to each section symbol."
+ "Applies Function to each section symbol."
  (save-excursion
   (dolist (Section (dkdo-SectionKeys))
    (if (or (not SkipMissing) (dkdo-SectionPresent Section))
     (funcall Function Section)))))
 
 (defconst dkdo-RefreshTimerSeconds 1800
-"The interval in seconds between automatic refreshes.")
+ "The interval in seconds between automatic refreshes.")
 
 (defvar dkdo-RefreshTimer nil
  "Timer for repeatedly refreshing the buffer.")
 
 (defun dkdo-RefreshTimerStart()
-"Starts the Refresh Timer (stops any existing timer first)."
+ "Starts the Refresh Timer (stops any existing timer first)."
  (interactive)
  (if (not (equal major-mode 'dkdo-mode))
   (error "Not in dkdo-mode!"))
@@ -305,7 +296,7 @@ NOTE: This should be avoided as it seems to mess up undo."
   dkdo-RefreshTimerSeconds 'dkdo-BufferTimerRefresh (current-buffer))))
 
 (defun dkdo-RefreshTimerStop()
-"Stops the current buffer refresh timer (if any).
+ "Stops the current buffer refresh timer (if any).
 Return t if a timer was actually in effect and stopped, nil
 otherwise."
  (interactive)
@@ -321,7 +312,7 @@ otherwise."
       (setq Rv t)))))))
 
 (defun dkdo-BufferTimerRefresh(Buffer)
-"Invokes dkdo-BufferRefresh.
+ "Invokes dkdo-BufferRefresh.
 To be called by the Refresh Timer."
  (save-excursion
   (condition-case nil
@@ -331,7 +322,7 @@ To be called by the Refresh Timer."
    (error (dkdo-RefreshTimerStop)))))
 
 (defun dkdo-BufferRefresh(&optional NoSort NoFixAppearance)
-"Scans the buffer and performs various adjustments.
+ "Scans the buffer and performs various adjustments.
 Ensures all necessary sections are present."
  (interactive)
 
@@ -350,18 +341,18 @@ Ensures all necessary sections are present."
    (or NoFixAppearance (dkdo-BufferFixAppearance)))))
 
 (defun dkdo-BufferCheckStructure()
-"Checks all sections are present."
+ "Checks all sections are present."
  (dkdo-SectionForeach (lambda(Section) "" (dkdo-SectionTo Section))))
 
 (defun dkdo-BufferCheckForConflictMarker()
-"Error if buffer has merge conflict marker."
+ "Error if buffer has merge conflict marker."
  (save-excursion
   (goto-char (point-min))
   (if (re-search-forward dkmisc-ConflictMarkerRe nil t)
    (error "File has merge conflicts! Cannot refresh."))))
 
 (defun dkdo-BufferPrepare()
-"Prepares the buffer by creating necessary sections.
+ "Prepares the buffer by creating necessary sections.
 Buffer must be empty to begin with."
 (unless
  (eq (buffer-size) 0)
@@ -374,28 +365,28 @@ Buffer must be empty to begin with."
 (goto-char (point-min)))
 
 (defun dkdo-BufferFixAppearance()
-"Fixes up the buffer presentation."
+ "Fixes up the buffer presentation."
  (org-content 2)
  (org-cycle-show-empty-lines t))
 
 (defun dkdo-TaskToLater()
-"Shifts the current task to LATER.
+ "Shifts the current task to LATER.
 Prompts for a new date/time or period of deferral."
 (interactive)
 (dkdo-TaskTo 'dkdo-Later))
 
 (defun dkdo-TaskToNow()
-"Shifts the current task to NOW."
+ "Shifts the current task to NOW."
 (interactive)
 (dkdo-TaskTo 'dkdo-Now))
 
 (defun dkdo-TaskToDone()
-"Shifts the current task to DONE."
+ "Shifts the current task to DONE."
 (interactive)
 (dkdo-TaskTo 'dkdo-Done))
 
 (defun dkdo-TaskTo(To)
-"Shifts the current task to section To.
+ "Shifts the current task to section To.
 Returns the final position."
  (interactive)
  (if (not (dkdo-TaskAtPoint)) (error "Not in a task!"))
@@ -475,11 +466,11 @@ Returns the final position."
    Destination)))
 
 (defun dkdo-PromoteIfSubtask()
-"Promotes a subtask to a task in the same section.
+ "Promotes a subtask to a task in the same section.
 Moves the subtask to the beginning of the current section and
-changes it to a task. Leaves point on the promoted task ready
-for a subsequent operation. Does not adjust dates etc. Does
-nothing if not a subtask."
+changes it to a task. Leaves point on the promoted task ready for
+a subsequent operation. Does not adjust dates etc. Does nothing
+if not a subtask."
  (if (dkdo-SubtaskAtPoint)
   (progn
    (dkdo-ErrorIfSubtaskInDone)
@@ -488,18 +479,18 @@ nothing if not a subtask."
     (dkdo-ToFirstTaskPosition Cs)))))
 
 (defun dkdo-ErrorIfSubtaskInDone()
-"Error if in subtask in DONE."
+ "Error if in subtask in DONE."
  (and
   (dkdo-SubtaskAtPoint)
   (dkdo-InSection 'dkdo-Done)
   (error "Subtask in DONE is illegal")))
 
 (defun dkdo-BadStartingSection(CurrentSection)
-"Error message and throw."
+ "Error message and throw."
  (error "Bad starting Section: \"%s\"!" (dkdo-SectionText CurrentSection)))
 
 (defun dkdo-SectionFindInsertPoint(Section Seconds)
-"Finds the location in Section for a task with the specified time/date.
+ "Finds the location in Section for a task with the specified time/date.
 If Seconds is nil the location is at the section start."
  (save-excursion
   (let*
@@ -529,7 +520,7 @@ If Seconds is nil the location is at the section start."
    (setq Target (point)))))
 
 (defun dkdo-LaterTasksDueToNow()
-"Moves any due later entries to NOW.
+ "Moves any due later entries to NOW.
 Returns the number of tasks actually moved."
  ; Avoid unintentional processing of DONE tasks where DONE header is
  ; missing/corrupt.
@@ -549,10 +540,10 @@ Returns the number of tasks actually moved."
    Rv)))
 
 (defun dkdo-ToFirstTaskPosition(Key)
-"Moves point to the start of the first task of section Key.
- If the section is empty, moves to the point at which a first
- task should be inserted. Returns the new value of point.
- Error if no suitable point found."
+ "Moves point to the start of the first task of section Key.
+If the section is empty, moves to the point at which a first task
+should be inserted. Returns the new value of point. Error if no
+suitable point found."
  (let*
   ((Target nil))
   (save-excursion
@@ -571,7 +562,7 @@ Returns the number of tasks actually moved."
    (goto-char Target))))
 
 (defun dkdo-TaskAtPoint()
-"Returns t if point is currently in an task."
+ "Returns t if point is currently in an task."
  (and
   (not (looking-at dkdo-SectionHeaderRe))
   (or
@@ -586,7 +577,7 @@ Returns the number of tasks actually moved."
       (equal Cs (dkdo-SectionCurrent))))))))
 
 (defun dkdo-ToNextTimestampTask()
-"Like following, but goes to the next task with a timestamp."
+ "Like following, but goes to the next task with a timestamp."
  (let*
   ((Done nil)
    (There nil)
@@ -601,9 +592,9 @@ Returns the number of tasks actually moved."
   Rv))
 
 (defun dkdo-ToNextTask()
-"Moves point to the start of the next task in the current section.
- Returns the new value of point. If no such task, returns nil and
- does not move point."
+ "Moves point to the start of the next task in the current section.
+Returns the new value of point. If no such task, returns nil and
+does not move point."
  (or
   (dkdo-TaskAtPoint)
   (error "Not in an task! Call dkdo-ToFirstTaskPosition first!"))
@@ -621,7 +612,7 @@ Returns the number of tasks actually moved."
    (goto-char Target))))
 
 (defun dkdo-ToTaskStart()
-"Moves point to the start of the current task.
+ "Moves point to the start of the current task.
 Returns the new position."
  (or (dkdo-TaskAtPoint) (error "Not in a task!"))
 
@@ -643,16 +634,16 @@ Returns the new position."
     (goto-char Target)))))
 
 (defun dkdo-ToTaskContent()
-"Moves point to the start of the current task's content.
- Returns the new position."
+ "Moves point to the start of the current task's content.
+Returns the new position."
  (dkdo-ToTaskStart)
  (re-search-forward dkdo-ReTask))
 
 (defun dkdo-ToTaskEnd()
-"Moves point to just after the end of the current task body.
-Note this is may be at the start of the next task which
-is in the next task. However trailing empty lines are
-NOT included in the task body. Returns the final position."
+ "Moves point to just after the end of the current task body.
+Note this is may be at the start of the next task which is in the
+next task. However trailing empty lines are NOT included in the
+task body. Returns the final position."
  (or (dkdo-TaskAtPoint) (error "Not in a task!"))
  (or
   (dkdo-ToNextTask)
@@ -664,7 +655,7 @@ NOT included in the task body. Returns the final position."
  (point))
 
 (defun dkdo-TaskHasSubtask()
-"Returns t if the current task has at least one subtask."
+ "Returns t if the current task has at least one subtask."
  (let*
   ((End (dkdo-PointAfter 'dkdo-ToTaskEnd))
    (Rv nil))
@@ -675,7 +666,7 @@ NOT included in the task body. Returns the final position."
   Rv))
 
 (defun dkdo-SubtaskAtPoint()
-"Returns t if point is currently in a subtask."
+ "Returns t if point is currently in a subtask."
  (or
   (looking-at dkdo-ReSubtask)
   (let*
@@ -688,7 +679,7 @@ NOT included in the task body. Returns the final position."
      (looking-at dkdo-ReSubtask))))))
 
 (defun dkdo-SubtaskToStart()
-"Moves point to the start of the current subtask.
+ "Moves point to the start of the current subtask.
 Returns the new position."
  (or (dkdo-SubtaskAtPoint) (error "Not in a subtask!"))
  (if (looking-at dkdo-ReSubtask)
@@ -702,7 +693,7 @@ Returns the new position."
    (if Target (goto-char Target)))))
     
 (defun dkdo-SubtaskToEnd()
-"Moves to just after the end of the current subtask body.
+ "Moves to just after the end of the current subtask body.
 Note this is may be at the start of the next task/subtask which
 is in the next task/subtask. However trailing empty lines are NOT
 included in the subtask body. Returns the final position."
@@ -721,7 +712,7 @@ included in the subtask body. Returns the final position."
   (point)))
 
 (defun dkdo-SkipEmptyLinesBackward()
-"Moves back over preceding empty lines.
+ "Moves back over preceding empty lines.
 Stops at the beginning of the last empty line encountered. The
 line preceding the final position is non-empty or non-existent.
 Returns the number of lines skipped."
@@ -732,7 +723,7 @@ Returns the number of lines skipped."
   Rv))
 
 (defun dkdo-PreviousLineEmpty()
-"Returns t if there is a previous line and it is empty."
+ "Returns t if there is a previous line and it is empty."
  (save-excursion
   (let* ((Rv nil))
    (if (and (equal (forward-line -1) 0) (looking-at "^$"))
@@ -740,8 +731,8 @@ Returns the number of lines skipped."
    Rv)))
 
 (defun dkdo-TaskGetTimestamp()
-"Extracts a timestamp from the beginning of the current task.
- Returns the timestamp as a string, or nil if none is present."
+ "Extracts a timestamp from the beginning of the current task.
+Returns the timestamp as a string, or nil if none is present."
  (let*
   ((Rv nil))
   (save-excursion
@@ -751,8 +742,8 @@ Returns the number of lines skipped."
   Rv))
 
 (defun dkdo-TaskConvertTimestamp()
-"Extracts and converts a timestamp from the beginning of the current task.
- Returns the timestamp as float seconds, or nil if none is present."
+ "Extracts and converts a timestamp from the beginning of the current task.
+Returns the timestamp as float seconds, or nil if none is present."
  (let*
   ((Tss (dkdo-TaskGetTimestamp))
    (Rv nil))
@@ -762,8 +753,8 @@ Returns the number of lines skipped."
     (error nil)))))
 
 (defun dkdo-TaskGetTimestampRepeater()
-"Extracts a timestamp repeater from the beginning of the current task.
- Returns the repeater as a string, or nil if none is present."
+ "Extracts a timestamp repeater from the beginning of the current task.
+Returns the repeater as a string, or nil if none is present."
  (let*
   ((Rv nil)
    (Re dkmisc-DateTimeRepeaterRe))
@@ -778,8 +769,8 @@ Returns the number of lines skipped."
   Rv)))
 
 (defun dkdo-TaskConvertTimestampRepeater()
-"Extracts and converts timestamp repeater from the current task.
- Returns the repeater as per dkmisc-TimeParseShift, or nil if none."
+ "Extracts and converts timestamp repeater from the current task.
+Returns the repeater as per dkmisc-TimeParseShift, or nil if none."
  (let*
   ((Trs (dkdo-TaskGetTimestampRepeater))
    (Rv nil))
@@ -789,14 +780,14 @@ Returns the number of lines skipped."
     (error nil)))))
 
 (defun dkdo-TaskPromptforTimestamp(&optional Ignore Length)
-"Prompts for a timestamp for the current task.
- Returns the new timestamp in text form. The value of any
- existing timestamp is used as the base for partial/relative
- input unless Ignore is set in which case the current time is
- used instead. If Length is specified it overrides the length of
- any current timestamp as a default for the length/precision of
- the returned timestamp. The actual returned length may be longer
- to accomodate the precision of the user input."
+ "Prompts for a timestamp for the current task.
+Returns the new timestamp in text form. The value of any existing
+timestamp is used as the base for partial/relative input unless
+Ignore is set in which case the current time is used instead. If
+Length is specified it overrides the length of any current
+timestamp as a default for the length/precision of the returned
+timestamp. The actual returned length may be longer to accomodate
+the precision of the user input."
  (let*
   ((OldTs (dkdo-TaskGetTimestamp))
    (Len (if Length Length (if OldTs (length OldTs) dkmisc-TimeYmdLen)))
@@ -805,9 +796,9 @@ Returns the number of lines skipped."
   Ts))
 
 (defun dkdo-TaskReplaceTimestamp(Timestamp)
-"Inserts timestamp in the current task.
- Any existing timestamp is removed first. Returns the new timestamp
- in float form."
+ "Inserts timestamp in the current task.
+Any existing timestamp is removed first. Returns the new
+timestamp in float form."
  (let*
   ((Seconds (dkmisc-TimeParse Timestamp)))
   (dkdo-TaskRemoveTimestampIfAny)
@@ -815,15 +806,15 @@ Returns the number of lines skipped."
   Seconds))
 
 (defun dkdo-TaskRemoveTimestampIfInDone()
-"Removes the timestamp from the current task if in DONE."
+ "Removes the timestamp from the current task if in DONE."
  (and
   (dkdo-InSection 'dkdo-Done)
   (dkdo-TaskRemoveTimestampIfAny)))
 
 (defun dkdo-TaskRemoveTimestampIfAny(&optional RemoveRepeater)
-"Removes the timestamp from the beginning of a task content (if any).
-If RemoveRepeater also removes the repeater (if any).
-Also removes any trailing space. Returns the timestamp."
+ "Removes the timestamp from the beginning of a task content (if any).
+If RemoveRepeater also removes the repeater (if any). Also
+removes any trailing space. Returns the timestamp."
  (let*
   ((Ts (dkdo-TaskGetTimestamp))
    (Rv Ts))
@@ -841,7 +832,7 @@ Also removes any trailing space. Returns the timestamp."
   Rv))
 
 (defun dkdo-TaskTimestampRemoveRepeaterMaybe()
-"Removes a repeater (if any), but leaves the timestamp.
+ "Removes a repeater (if any), but leaves the timestamp.
 Works recursively through timestamps until repeater found."
  (let*
   ((Ts (dkdo-TaskGetTimestamp))
@@ -853,7 +844,7 @@ Works recursively through timestamps until repeater found."
     (dkdo-TaskInsertTimestamp Ts)))))
 
 (defun dkdo-TaskInsertTimestamp(&optional Timestamp)
-"Inserts a timestamp (text form) in the current task.
+ "Inserts a timestamp (text form) in the current task.
 Returns the value inserted (text form)."
  (save-excursion
   (let*
@@ -869,7 +860,7 @@ Returns the value inserted (text form)."
    Ts)))
 
 (defun dkdo-TaskTimestampApplyRepeater()
-"Offsets the task timestamp by the amount indicated its repeater.
+ "Offsets the task timestamp by the amount indicated its repeater.
 Returns the altered timestamp in float seconds. Preserves the
 length of timestamp unless the offset is less than a day in which
 case the timestamp is expanded to full length. Does nothing and
@@ -890,32 +881,32 @@ returns nil if no timestamp or no repeater. "
        Rv)))))))
 
 (defconst dkdo-DueHours 9.0
-"Dated items become due this many hours before the timestamp.")
+ "Dated items become due this many hours before the timestamp.")
 
 (defconst dkdo-DueSkipBeforeMidnight 3.0
-"Hours before midnight to skip in due calculation.")
+ "Hours before midnight to skip in due calculation.")
 
 (defconst dkdo-DueSkipAfterMidnight 7.0
-"Hours before midnight to skip in due calculation.")
+ "Hours before midnight to skip in due calculation.")
 
 (defun dkdo-TaskDue()
-"Returns t if the current task is due."
+ "Returns t if the current task is due."
  (let*
   ((Tts (dkdo-TaskConvertTimestamp)))
   (and Tts (dkdo-TimeDue Tts))))
 
 (defun dkdo-TimeDue(Time)
-"Returns t if Time is 'due'."
+ "Returns t if Time is 'due'."
  (dkmisc-TimeDue Time (* dkdo-DueHours 3600)
   dkdo-DueSkipBeforeMidnight dkdo-DueSkipAfterMidnight))
 
 (defun dkdo-TaskMoveToSection(Section &optional Subtask)
-"Moves the current task/subtask to the beginning of Section.
+ "Moves the current task/subtask to the beginning of Section.
 A subtask becomes a task when it is moved or copied."
  (dkdo-TaskCopyToSection Section t Subtask))
 
 (defun dkdo-TaskMoveTo(Point &optional Subtask)
-"Moves the current task/subtask to Point.
+ "Moves the current task/subtask to Point.
 A subtask becomes a task when it is moved or copied."
  (dkdo-TaskCopyTo Point t Subtask))
 
@@ -928,7 +919,7 @@ A subtask becomes a task when it is moved or copied."
    (dkdo-PointAfter 'dkdo-ToFirstTaskPosition Section) Move Subtask)))
 
 (defun dkdo-TaskCopyTo(Point &optional Move Subtask)
-"Copies the current task/subtask to Point.
+ "Copies the current task/subtask to Point.
 Returns the position immediately after the insert to facilitate a
 possible subsequent insert. A subtask becomes a task when it is
 moved or copied."
@@ -950,7 +941,7 @@ moved or copied."
   Rv))
 
 (defun dkdo-TaskInsertText(TaskText Point)
-"Inserts TaskText at Point.
+ "Inserts TaskText at Point.
 Assumes TaskText is a valid task."
  (let* ((Rv nil))
   (save-excursion
@@ -964,7 +955,7 @@ Assumes TaskText is a valid task."
   Rv))
 
 (defun dkdo-TaskHideSubtree()
-"Hides the task subtree without swallowing trailing empty lines."
+ "Hides the task subtree without swallowing trailing empty lines."
  (save-excursion
   (let* ((Start (dkdo-ToTaskStart)))
    (dkdo-ToTaskEnd)
@@ -976,7 +967,7 @@ Assumes TaskText is a valid task."
     (hide-subtree)))))
 
 (defun dkdo-TaskAsString(&optional Subtask)
-"Returns the current task/subtask as a string."
+ "Returns the current task/subtask as a string."
  (save-excursion
   (let*
    ((Start (if Subtask (dkdo-SubtaskToStart) (dkdo-ToTaskStart)))
@@ -984,7 +975,7 @@ Assumes TaskText is a valid task."
    (buffer-substring Start End))))
 
 (defun dkdo-TaskDelete(&optional Subtask)
-"Deletes the current task/subtask."
+ "Deletes the current task/subtask."
  (save-excursion
   (let*
    ((Start (if Subtask (dkdo-SubtaskToStart) (dkdo-ToTaskStart)))
@@ -992,22 +983,22 @@ Assumes TaskText is a valid task."
    (delete-region Start End))))
 
 (defun dkdo-PointAfter(Function &rest Args)
-"Returns the buffer position after invoking the supplied function.
- Current buffer position is not affected."
+ "Returns the buffer position after invoking the supplied function.
+Current buffer position is not affected."
  (save-excursion
   (apply Function Args)))
 
 (defconst dkdo-ReCheckboxesNumericDone "\\[\\([0-9+]\\)/\\1\\]"
-"Org mode checkbox statistics cookie indicating all done.")
+ "Org mode checkbox statistics cookie indicating all done.")
 
 (defconst dkdo-ReCheckboxesPercentDone "\\[100%\\]"
-"Org mode percent checkbox statistics cookie indicating all done.")
+ "Org mode percent checkbox statistics cookie indicating all done.")
 
 (defconst dkdo-ReCheckboxesDone
  (concat dkdo-ReCheckboxesNumericDone "\\|" dkdo-ReCheckboxesPercentDone))
 
 (defun dkdo-CheckboxStatistics()
-"Run when checkbox statistics are updated.
+ "Run when checkbox statistics are updated.
 Checks if the current task/subtask is has a completed checkbox
 cookie, and if so shifts it forward from NOW. Only active in
 section NOW, and when dkdo-AutoFinishCheckedTasks is t."
@@ -1022,7 +1013,7 @@ section NOW, and when dkdo-AutoFinishCheckedTasks is t."
     (dkdo-TaskToDone))))))
    
 (defun dkdo-TaskStart()
-"Inserts the beginning of a new task/subtask after the current."
+ "Inserts the beginning of a new task/subtask after the current."
  (interactive)
  (if (dkdo-SubtaskAtPoint)
   (progn
