@@ -28,11 +28,53 @@
 (declare-function org-cycle-show-empty-lines "org")
 (declare-function hide-subtree "outline")
 
-(defvar dkdo-Filename nil
- "The default dolist file name for dkdo-Edit.")
+(defconst dkdo-SectionHeaderPrefix "* ")
+(defconst dkdo-SectionHeaderSuffix ":")
 
-(defconst dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
- "Date plus hours and minutes (no seconds).")
+(defconst dkdo-SectionHeaderRe (concat "^\\" dkdo-SectionHeaderPrefix)
+ "Start of a section header. Use function of same name.")
+
+(defconst dkdo-ReHeadingTextAny "[^ 	\n]"
+ "First character of valid section header text.")
+
+(defconst dkdo-ReHeading "^[*]\\{1,3\\} "
+ "Only outline levels 1, 2, and 3 are significant.")
+
+(defconst dkdo-PrefixTask "** ")
+(defconst dkdo-ReTask "^\\*\\* ")
+(defconst dkdo-PrefixSubtask "*** ")
+(defconst dkdo-ReSubtask "^\\*\\*\\* ")
+
+(defconst dkdo-Sections
+ '((dkdo-Now . "NOW")
+   (dkdo-Later . "LATER")
+   (dkdo-Done . "DONE"))
+ "Do List section symbols/name association.")
+
+(defgroup dkdo nil
+ "Dolist Mode Customisation."
+ :tag "dkdo"
+ :group 'text)
+
+(defcustom dkdo-AutoFinishCheckedTasks nil
+ "If t auto-finish tasks with checkboxes from NOW."
+ :tag "AutoFinishCheckedTasks"
+ :type '(boolean))
+
+(defcustom dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
+ "Length of timestamps prefixed on insertion in DONE section.
+Default is date plus hours and minutes (no seconds)."
+ :tag "DefaultDoneTimestampLength"
+ :type '(integer))
+
+(defcustom dkdo-Filename nil
+ "Default dolist filename for `dkdo-Edit'."
+ :tag "Filename"
+ :type '(string))
+
+(defcustom dkdo-mode-hook nil
+ "Hooks called on entering Do List mode."
+ :type '(hook))
 
 ;;;###autoload
 (defun dkdo-SetCcKeys()
@@ -122,15 +164,6 @@ subtasks, the components are tightly integrated into the task."
  (define-key dkdo-mode-map "\C-c\C-xr" 'dkdo-BufferRefresh)
  (define-key dkdo-mode-map "\C-c\C-xs" 'dkdo-TaskStart))
 
-(defvar dkdo-mode-hook nil
- "Hooks called on entering Do List mode.")
-
-(defconst dkdo-Sections
- '((dkdo-Now . "NOW")
-   (dkdo-Later . "LATER")
-   (dkdo-Done . "DONE"))
- "Do List section symbols/name association.")
-
 (defun dkdo-SectionKeys()
  "Return a list containing the keys of dkdo-Sections."
  (let*
@@ -154,26 +187,6 @@ Return nil if SECTIONTEXT is unsupported."
 (defun dkdo-InSection(Section)
  "Return t if point is in SECTION."
  (eq (dkdo-SectionCurrent) Section))
-
-(defconst dkdo-AutoFinishCheckedTasks nil
- "If t auto-finish tasks with checkboxes from NOW.")
-
-(defconst dkdo-SectionHeaderPrefix "* ")
-(defconst dkdo-SectionHeaderSuffix ":")
-
-(defconst dkdo-SectionHeaderRe (concat "^\\" dkdo-SectionHeaderPrefix)
- "Start of a section header. Use function of same name.")
-
-(defconst dkdo-ReHeadingTextAny "[^ 	\n]"
- "First character of valid section header text.")
-
-(defconst dkdo-ReHeading "^[*]\\{1,3\\} "
- "Only outline levels 1, 2, and 3 are significant.")
-
-(defconst dkdo-PrefixTask "** ")
-(defconst dkdo-ReTask "^\\*\\* ")
-(defconst dkdo-PrefixSubtask "*** ")
-(defconst dkdo-ReSubtask "^\\*\\*\\* ")
 
 (defun dkdo-SectionHeader(Key)
  "Return the full section header for KEY."
