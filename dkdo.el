@@ -316,7 +316,7 @@ Skip missing sections if SKIPMISSING."
  "Start the Refresh Timer if enabled.
 First unconditionally stops any existing timer and then starts a
 new one if variable `dkdo-RefreshSeconds' is greater than
-zero. Current buffer must be in Do List mode.")
+zero. Current buffer must be in Do List mode."
  (interactive)
  (if (not (equal major-mode 'dkdo-mode))
   (error "Not in dkdo-mode!"))
