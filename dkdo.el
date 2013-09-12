@@ -313,8 +313,8 @@ Skip missing sections if SKIPMISSING."
  "Timer for repeatedly refreshing the buffer.")
 
 (defun dkdo-RefreshTimerStartIf()
- "Start the Refresh Timer if enabled.
-First unconditionally stops any existing timer and then starts a
+ "Start the Refresh Timer if appropriately configured.
+First unconditionally stop any existing timer and then start a
 new one if variable `dkdo-RefreshSeconds' is greater than zero.
 Current buffer must be in Do List mode."
  (interactive)
@@ -346,7 +346,7 @@ otherwise."
 
 (defun dkdo-BufferTimerRefresh(Buffer)
  "Invoke `dkdo-BufferRefresh' on BUFFER.
-Wrapper that calls `dkdo-BufferRefresh' on behalf of the Refresh
+Call `dkdo-BufferRefresh' on behalf of the Refresh
 Timer, with sort and other cosmetic adjustments disabled."
  (save-excursion
   (condition-case nil
