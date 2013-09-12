@@ -59,27 +59,37 @@
  :group 'text)
 
 (defcustom dkdo-AutoFinishCheckedTasks nil
- "If t, auto-finish tasks with checkboxes from section NOW.
-Task is automatically moved from section NOW to section DONE when
-the last box is checked."
- :tag "AutoFinishCheckedTasks"
+ "If t, auto-finish task with checkboxes from section NOW.
+A task is automatically moved from section NOW to section DONE when
+all its checkboxes are ticked."
+ :tag "dkdo-AutoFinishCheckedTasks"
  :type '(boolean))
 
 (defcustom dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
  "Length of timestamps prefixed on insertion in DONE section.
-Length includes separator characters. Default is date plus hours
-and minutes (no seconds)."
- :tag "DefaultDoneTimestampLength"
+The length includes separator characters. Default is 16 for
+'YYYY-MM-DD HH:MM'"
+ :tag "dkdo-DefaultDoneTimestampLength"
  :type '(integer))
 
 (defcustom dkdo-Filename nil
  "Default dolist filename for `dkdo-Edit'."
- :tag "Filename"
+ :tag "dkdo-Filename"
  :type '(file))
 
 (defcustom dkdo-mode-hook nil
  (concat "Hooks called on entering " dkdo-ModeName ".")
+ :tag "dkdo-mode-hook"
  :type '(hook :options (dkdo-SetCcKeys)))
+
+(defcustom dkdo-RefreshSeconds 1800
+ (concat "The interval in seconds between automatic refreshes.
+The value in effect when " dkdo-ModeName " mode is started
+controls automatic refreshes for the buffer. If greater than
+zero, `dkdo-BufferRefresh' is called periodically at the
+specified interval.")
+ :tag "dkdo-RefreshSeconds"
+ :type '(integer))
 
 ;;;###autoload
 (defun dkdo-SetCcKeys()
@@ -160,7 +170,7 @@ subtasks, the components are tightly integrated into the task."
   (dkdo-BufferPrepare)
   (dkdo-BufferRefresh)
   (if (buffer-modified-p) (basic-save-buffer)))
- (dkdo-RefreshTimerStart)
+ (dkdo-RefreshTimerStartIf)
  (goto-char (point-min))
 
  (define-key dkdo-mode-map "\C-c\C-xd" 'dkdo-TaskToDone)
@@ -299,22 +309,24 @@ Skip missing sections if SKIPMISSING."
    (if (or (not SkipMissing) (dkdo-SectionPresent Section))
     (funcall Function Section)))))
 
-(defconst dkdo-RefreshTimerSeconds 1800
- "The interval in seconds between automatic refreshes.")
-
 (defvar dkdo-RefreshTimer nil
  "Timer for repeatedly refreshing the buffer.")
 
-(defun dkdo-RefreshTimerStart()
- "Start the Refresh Timer (stop any existing timer first)."
+(defun dkdo-RefreshTimerStartIf()
+ (concat "Start the Refresh Timer if enabled.
+First unconditionally stops any existing timer and then starts a
+new one if variable `dkdo-RefreshSeconds' is greater than
+zero. Current buffer must be in " dkdo-ModeName ".")
  (interactive)
  (if (not (equal major-mode 'dkdo-mode))
   (error "Not in dkdo-mode!"))
  (dkdo-RefreshTimerStop)
- (message "Starting Refresh Timer...")
- (make-local-variable 'dkdo-RefreshTimer)
- (setq dkdo-RefreshTimer (run-at-time t
-  dkdo-RefreshTimerSeconds 'dkdo-BufferTimerRefresh (current-buffer))))
+ (if (> dkdo-RefreshSeconds 0)
+  (progn
+   (message "Starting Refresh Timer...")
+   (make-local-variable 'dkdo-RefreshTimer)
+   (setq dkdo-RefreshTimer (run-at-time t dkdo-RefreshSeconds
+    'dkdo-BufferTimerRefresh (current-buffer))))))
 
 (defun dkdo-RefreshTimerStop()
  "Stop the current buffer refresh timer (if any).
@@ -334,7 +346,8 @@ otherwise."
 
 (defun dkdo-BufferTimerRefresh(Buffer)
  "Invoke `dkdo-BufferRefresh' on BUFFER.
-To be called by the Refresh Timer."
+Wrapper that calls `dkdo-BufferRefresh' on behalf of the Refresh
+Timer, with sort and other cosmetic adjustments disabled."
  (save-excursion
   (condition-case nil
    (progn
@@ -343,8 +356,11 @@ To be called by the Refresh Timer."
    (error (dkdo-RefreshTimerStop)))))
 
 (defun dkdo-BufferRefresh(&optional NoSort NoFixAppearance)
- "Scan the current buffer and performs various adjustments.
-Ensure all necessary sections are present."
+ "Scan the current buffer and perform various adjustments.
+Move tasks that have become due from section LATER to section
+NOW. If NOSORT is nil, sort tasks in the Do List sections. If
+NOFIXAPPEARANCE is nil, perform task folding and other cosmetic
+adjustments."
  (interactive)
 
  ; It's a bad idea to move tasks around when there are
