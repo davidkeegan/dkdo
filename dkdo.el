@@ -313,10 +313,10 @@ Skip missing sections if SKIPMISSING."
  "Timer for repeatedly refreshing the buffer.")
 
 (defun dkdo-RefreshTimerStartIf()
- (concat "Start the Refresh Timer if enabled.
+ "Start the Refresh Timer if enabled.
 First unconditionally stops any existing timer and then starts a
 new one if variable `dkdo-RefreshSeconds' is greater than
-zero. Current buffer must be in " dkdo-ModeName ".")
+zero. Current buffer must be in Do List mode.")
  (interactive)
  (if (not (equal major-mode 'dkdo-mode))
   (error "Not in dkdo-mode!"))
