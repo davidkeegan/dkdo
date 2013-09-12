@@ -54,7 +54,7 @@
  (concat dkdo-ModeName " section symbols/name association."))
 
 (defgroup dkdo nil
- (concat dodo-ModeName " mode Customisation.")
+ (concat dkdo-ModeName " mode Customisation.")
  :tag "dkdo"
  :group 'text)
 
