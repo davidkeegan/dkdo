@@ -10,7 +10,7 @@
 
 ;;; Commentary:
 ;;
-;; This is a do list mode for a user who needs to manipulate the
+;; This is a Do List mode for a user who needs to manipulate the
 ;; entries directly to adjust priorities. It uses org/outline mode to
 ;; make it easy to get an overview. Urgent tasks appear near the top
 ;; of the file, and can be made to move automatically to the top of
@@ -45,36 +45,41 @@
 (defconst dkdo-PrefixSubtask "*** ")
 (defconst dkdo-ReSubtask "^\\*\\*\\* ")
 
+(defconst dkdo-ModeName "Do List")
+
 (defconst dkdo-Sections
  '((dkdo-Now . "NOW")
    (dkdo-Later . "LATER")
    (dkdo-Done . "DONE"))
- "Do List section symbols/name association.")
+ (concat dkdo-ModeName " section symbols/name association."))
 
 (defgroup dkdo nil
- "Dolist Mode Customisation."
+ (concat dodo-ModeName " mode Customisation.")
  :tag "dkdo"
  :group 'text)
 
 (defcustom dkdo-AutoFinishCheckedTasks nil
- "If t auto-finish tasks with checkboxes from NOW."
+ "If t, auto-finish tasks with checkboxes from section NOW.
+Task is automatically moved from section NOW to section DONE when
+the last box is checked."
  :tag "AutoFinishCheckedTasks"
  :type '(boolean))
 
 (defcustom dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
  "Length of timestamps prefixed on insertion in DONE section.
-Default is date plus hours and minutes (no seconds)."
+Length includes separator characters. Default is date plus hours
+and minutes (no seconds)."
  :tag "DefaultDoneTimestampLength"
  :type '(integer))
 
 (defcustom dkdo-Filename nil
  "Default dolist filename for `dkdo-Edit'."
  :tag "Filename"
- :type '(string))
+ :type '(file))
 
 (defcustom dkdo-mode-hook nil
- "Hooks called on entering Do List mode."
- :type '(hook))
+ (concat "Hooks called on entering " dkdo-ModeName ".")
+ :type '(hook :options (dkdo-SetCcKeys)))
 
 ;;;###autoload
 (defun dkdo-SetCcKeys()
@@ -105,7 +110,7 @@ a dolist"
   (string-match "\\.do$" (buffer-file-name))))
 
 ;;;###autoload
-(define-derived-mode dkdo-mode org-mode "Do List Mode"
+(define-derived-mode dkdo-mode org-mode dkdo-ModeName
  "A do file has top-level Sections NOW, LATER, and DONE.
 Each second-level header within a section is a task. A
 third-level header within a task is a subtask. The task/subtask
