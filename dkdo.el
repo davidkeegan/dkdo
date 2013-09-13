@@ -28,6 +28,72 @@
 (declare-function org-cycle-show-empty-lines "org")
 (declare-function hide-subtree "outline")
 
+(defgroup dkdo nil
+ (concat dkdo-ModeName " mode Customisation.")
+ :tag "dkdo"
+ :group 'text)
+
+(defcustom dkdo-AutoFinishCheckedTasks nil
+ "If t, auto-finish task with checkboxes from section NOW.
+A task is automatically moved from section NOW to section DONE when
+all its checkboxes are ticked."
+ :tag "dkdo-AutoFinishCheckedTasks"
+ :type '(boolean))
+
+(defcustom dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
+ "Length of timestamps prefixed on insertion in DONE section.
+The length includes separator characters. Default is 16 for
+'YYYY-MM-DD HH:MM'"
+ :tag "dkdo-DefaultDoneTimestampLength"
+ :type '(integer))
+
+(defcustom dkdo-DueNoticeHours 9.0
+ "Hours before its timestamp when a task in section LATER becomes due.
+The intent is to provide some prior notice of upcoming tasks to
+allow for preparation. As 'working' hours are needed for
+preparation, the time from `dkdo-DueSkipBeforeMidnight' hours
+before midnight to `dkdo-DueSkipAfterMidnight' hours after
+midnight is not included when calculating the due time."
+ :tag "dkdo-DueNoticeHours"
+ :type '(float))
+
+(defcustom dkdo-DueSkipAfterMidnight 7.0
+ "Hours after midnight to skip when calculating a task's due time.
+This period is not considered to be working time, and is
+therefore skipped when calculating the due time of a task in
+section LATER."
+ :tag "dkdo-DueSkipAfterMidnight"
+ :type '(float))
+
+(defcustom dkdo-DueSkipBeforeMidnight 3.0
+ "Hours before midnight to skip when calculating a task's due time.
+This period is not considered to be working time, and is
+therefore skipped when calculating the due time of a task in
+section LATER."
+ :tag "dkdo-DueSkipBeforeMidnight"
+ :type '(float))
+
+(defcustom dkdo-Filename nil
+ "Default dolist filename for `dkdo-Edit'.
+Function `dkdo-Edit' visits this file if invoked without a prefix
+argument. Otherwise it prompts for a filename."
+ :tag "dkdo-Filename"
+ :type '(file))
+
+(defcustom dkdo-RefreshSeconds 1800
+ (concat "The interval in seconds between automatic refreshes.
+The value in effect when " dkdo-ModeName " mode is started
+controls automatic refreshes for the buffer. If greater than
+zero, `dkdo-BufferRefresh' is called periodically at the
+specified interval.")
+ :tag "dkdo-RefreshSeconds"
+ :type '(integer))
+
+(defcustom dkdo-mode-hook nil
+ (concat "Hooks called on entering " dkdo-ModeName ".")
+ :tag "dkdo-mode-hook"
+ :type '(hook :options (dkdo-SetCcKeys)))
+
 (defconst dkdo-SectionHeaderPrefix "* ")
 (defconst dkdo-SectionHeaderSuffix ":")
 
@@ -53,43 +119,14 @@
    (dkdo-Done . "DONE"))
  (concat dkdo-ModeName " section symbols/name association."))
 
-(defgroup dkdo nil
- (concat dkdo-ModeName " mode Customisation.")
- :tag "dkdo"
- :group 'text)
+(defconst dkdo-ReCheckboxesNumericDone "\\[\\([0-9+]\\)/\\1\\]"
+ "Org mode checkbox statistics cookie indicating all done.")
 
-(defcustom dkdo-AutoFinishCheckedTasks nil
- "If t, auto-finish task with checkboxes from section NOW.
-A task is automatically moved from section NOW to section DONE when
-all its checkboxes are ticked."
- :tag "dkdo-AutoFinishCheckedTasks"
- :type '(boolean))
+(defconst dkdo-ReCheckboxesPercentDone "\\[100%\\]"
+ "Org mode percent checkbox statistics cookie indicating all done.")
 
-(defcustom dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
- "Length of timestamps prefixed on insertion in DONE section.
-The length includes separator characters. Default is 16 for
-'YYYY-MM-DD HH:MM'"
- :tag "dkdo-DefaultDoneTimestampLength"
- :type '(integer))
-
-(defcustom dkdo-Filename nil
- "Default dolist filename for `dkdo-Edit'."
- :tag "dkdo-Filename"
- :type '(file))
-
-(defcustom dkdo-mode-hook nil
- (concat "Hooks called on entering " dkdo-ModeName ".")
- :tag "dkdo-mode-hook"
- :type '(hook :options (dkdo-SetCcKeys)))
-
-(defcustom dkdo-RefreshSeconds 1800
- (concat "The interval in seconds between automatic refreshes.
-The value in effect when " dkdo-ModeName " mode is started
-controls automatic refreshes for the buffer. If greater than
-zero, `dkdo-BufferRefresh' is called periodically at the
-specified interval.")
- :tag "dkdo-RefreshSeconds"
- :type '(integer))
+(defconst dkdo-ReCheckboxesDone
+ (concat dkdo-ReCheckboxesNumericDone "\\|" dkdo-ReCheckboxesPercentDone))
 
 ;;;###autoload
 (defun dkdo-SetCcKeys()
@@ -917,15 +954,6 @@ return nil if no timestamp or no repeater. "
        (dkdo-TaskInsertTimestamp NewTs)
        Rv)))))))
 
-(defconst dkdo-DueHours 9.0
- "Dated items become due this many hours before the timestamp.")
-
-(defconst dkdo-DueSkipBeforeMidnight 3.0
- "Hours before midnight to skip in due calculation.")
-
-(defconst dkdo-DueSkipAfterMidnight 7.0
- "Hours before midnight to skip in due calculation.")
-
 (defun dkdo-TaskDue()
  "Return t if the current task is due."
  (let*
@@ -934,7 +962,7 @@ return nil if no timestamp or no repeater. "
 
 (defun dkdo-TimeDue(Time)
  "Returns t if TIME is 'due'."
- (dkmisc-TimeDue Time (* dkdo-DueHours 3600)
+ (dkmisc-TimeDue Time (* dkdo-DueNoticeHours 3600)
   dkdo-DueSkipBeforeMidnight dkdo-DueSkipAfterMidnight))
 
 (defun dkdo-TaskMoveToSection(Section &optional Subtask)
@@ -1032,15 +1060,6 @@ If SUBTASK is non-nil, delete a subtask, otherwise delete a task."
 Current buffer position is not affected."
  (save-excursion
   (apply Function Args)))
-
-(defconst dkdo-ReCheckboxesNumericDone "\\[\\([0-9+]\\)/\\1\\]"
- "Org mode checkbox statistics cookie indicating all done.")
-
-(defconst dkdo-ReCheckboxesPercentDone "\\[100%\\]"
- "Org mode percent checkbox statistics cookie indicating all done.")
-
-(defconst dkdo-ReCheckboxesDone
- (concat dkdo-ReCheckboxesNumericDone "\\|" dkdo-ReCheckboxesPercentDone))
 
 (defun dkdo-CheckboxStatistics()
  "Run when checkbox statistics are updated.
