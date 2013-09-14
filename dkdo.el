@@ -28,6 +28,8 @@
 (declare-function org-cycle-show-empty-lines "org")
 (declare-function hide-subtree "outline")
 
+(defconst dkdo-ModeName "Do List")
+
 (defgroup dkdo nil
  (concat dkdo-ModeName " mode Customisation.")
  :tag "dkdo"
@@ -110,8 +112,6 @@ specified interval.")
 (defconst dkdo-ReTask "^\\*\\* ")
 (defconst dkdo-PrefixSubtask "*** ")
 (defconst dkdo-ReSubtask "^\\*\\*\\* ")
-
-(defconst dkdo-ModeName "Do List")
 
 (defconst dkdo-Sections
  '((dkdo-Now . "NOW")
