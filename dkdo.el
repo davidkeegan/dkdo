@@ -30,6 +30,7 @@
 
 (defconst dkdo-ModeName "Do List")
 
+;;;###autoload
 (defgroup dkdo nil
  (concat dkdo-ModeName " mode Customisation.")
  :tag "dkdo"
