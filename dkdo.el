@@ -34,7 +34,7 @@
 (defgroup dkdo nil
  (concat dkdo-ModeName " mode Customisation.")
  :tag "dkdo"
- :group 'text)
+ :group 'dk)
 
 (defcustom dkdo-AutoFinishCheckedTasks nil
  "If t, auto-finish task with checkboxes from section NOW.
