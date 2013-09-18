@@ -57,7 +57,7 @@ the file when they become due.
 
 @node Introduction
 @chapter Introduction
-@cindex intro
+@cindex Introduction
 
 A do file has top-level Sections NOW, LATER, and DONE. Each
 second-level header within a section is a task. A
@@ -103,15 +103,15 @@ subtasks, the components are tightly integrated into the task.
 
 @node Data
 @chapter Data
-@printindex cp
+@cindex Data
 
 @node Operations
 @chapter Operations
-@printindex cp
+@cindex Operations
 
 @node Version Control
 @chapter Version Control
-@printindex cp
+@cindex Version Control
 
 @node Concept Index
 @chapter Concept Index
