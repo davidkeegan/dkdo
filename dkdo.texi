@@ -59,12 +59,13 @@ the file when they become due.
 @chapter Introduction
 @cindex intro
 
- "A do file has top-level Sections NOW, LATER, and DONE.
-Each second-level header within a section is a task. A
-third-level header within a task is a subtask. The task/subtask
-content starts immediately after the header prefix and includes
-the remainder of the header and any content, including any lower
-level sections (which are not significant to this mode).
+A do file has top-level Sections NOW, LATER, and DONE. Each
+second-level header within a section is a task. A
+third-level header within a task is a subtask. The
+task/subtask content starts immediately after the header
+prefix and includes the remainder of the header and any
+content, including any lower level sections (which are not
+significant to this mode).
 
 Dated tasks start life in LATER, other tasks in NOW. Tasks are
 generally shifted LATER->NOW to be worked on (this shift can be
@@ -98,7 +99,19 @@ item in the task body for each component. The task header line
 can indicate the number or percentage of components currently
 completed, and the task may be automatically shifted to DONE
 once all components have been checked (configurable). Unlike
-subtasks, the components are tightly integrated into the task."
+subtasks, the components are tightly integrated into the task.
+
+@node Data
+@chapter Data
+@printindex cp
+
+@node Operations
+@chapter Operations
+@printindex cp
+
+@node Version Control
+@chapter Version Control
+@printindex cp
 
 @node Concept Index
 @chapter Concept Index
