@@ -48,12 +48,15 @@ the file when they become due.
 @end ifnottex
 
 @menu
-* Introduction to Do List Mode::
+* Introduction::
+* Data::
+* Operations::
+* Version Control::
 * Concept Index::
 @end menu
 
-@node Introduction to Do List Mode
-@chapter Introduction to Do List Mode
+@node Introduction
+@chapter Introduction
 @cindex intro
 
  "A do file has top-level Sections NOW, LATER, and DONE.
@@ -96,7 +99,6 @@ can indicate the number or percentage of components currently
 completed, and the task may be automatically shifted to DONE
 once all components have been checked (configurable). Unlike
 subtasks, the components are tightly integrated into the task."
-
 
 @node Concept Index
 @chapter Concept Index
