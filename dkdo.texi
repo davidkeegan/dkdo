@@ -40,50 +40,107 @@ Foundation GNU Free Documentation Licence.
 @ifnottex
 @node Top
 @top Do List Mode
-This is a do list mode for a user who needs to manipulate the
-entries directly to adjust priorities. It uses org/outline mode to
-make it easy to get an overview. Urgent tasks appear near the top
-of the file, and can be made to move automatically to the top of
-the file when they become due.
+This mode facilitates maintaining a freely editable task
+list in a single file by automating many frequent
+operations. It keeps urgent tasks near the top of the file
+and supports deferred and recurring tasks.
+
+It uses org mode's outlining, visibility cycling, and
+lists/checkboxes for structuring tasks, but in so far as it
+maintains the Do List in a separate document, it provides an
+alternative to org mode's TODO items feature.
 @end ifnottex
 
 @menu
 * Introduction::
-* Data::
+* Structure::
 * Operations::
 * Version Control::
 * Concept Index::
+
 @end menu
 
 @node Introduction
 @chapter Introduction
 @cindex Introduction
 
-A do file has top-level Sections NOW, LATER, and DONE. Each
-second-level header within a section is a task. A
-third-level header within a task is a subtask. The
-task/subtask content starts immediately after the header
+@node Structure
+@chapter Structure
+@cindex Structure
+
+A Do List is a single file using org-mode headlines for
+structure. It has three sections, @dfn{NOW}, @dfn{LATER},
+and @dfn{DONE}, in that order and each consisting of a
+top-level org-mode heading and its contents, which comprises
+a number of tasks.
+
+A task consists of an org-mode second level headline and its
+contents. A third-level headline within a task is a subtask.
+The task/subtask content starts immediately after the header
 prefix and includes the remainder of the header and any
 content, including any lower level sections (which are not
-significant to this mode).
+significant to this mode), and other structural elements
+such as lists.
 
-Dated tasks start life in LATER, other tasks in NOW. Tasks are
-generally shifted LATER->NOW to be worked on (this shift can be
-manual or automatic) and NOW->DONE when finished. On entering
-DONE tasks are prefixed with a timestamp indicating the date of
-completion. Tasks can also be shifted DONE->NOW if they are being
-re-visited (the DONE timestamp is removed), or NOW-LATER to be
-deferred (eg pending some other event). A task shifting to LATER
-is prefixed with a new due date which is prompted for.
+For example, here is a minimal do list with a couple of
+tasks in section @dfn{NOW} and empty @dfn{LATER} and @dfn{DONE}
+sections:
 
-The intent of a subtask is to allow related items to be collected
-and managed together and perhaps hidden from view util they are
-being worked on. The relationship between a subtask and its
-parent is not permanent and is broken at some point before the
-subtask is completed. To ensure every subtask is processed it is
-illegal to shift a task containing subtasks from NOW->DONE.
-Instead each subtask must be shifted individually. A consequence
-of this is that subtasks do not exist in DONE.
+@smallformat
+@verbatim
+* NOW:
+** This is a Task:
+- Do this thoroughly.
+** A second Task, with checkboxes [1/2]:
+- [X] Item 1.
+- [ ] Item 2.
+
+* LATER:
+
+* DONE:
+@end verbatim
+@end smallformat
+
+Urgent tasks and tasks currently being worked on live in
+section @dfn{NOW}. It is usually convenient to keep the most
+urgent tasks closer to the beginning of the section.
+
+Section @dfn{LATER} contains dated tasks, generally in
+reverse date order with the latest on top. Tasks which need
+to be performed or reviewed on a perticular date remain in
+this section until they become due, when they are usually
+shifted to section @dfn{NOW} to be worked on (this shift can
+be automatic). This section is also a useful home for tasks
+which are on hold pending action by others, and tasks which
+have been deferred for later consideration.
+
+Once completed, tasks are moved to the @dfn{DONE} section,
+where all tasks are prefixed with a timestamp representing
+the completion date. This section is generally sorted in
+chronological order and is useful as a historical record.
+
+The intent of a subtask is to allow related items to be
+collected and managed together and perhaps hidden from view
+util they are being worked on. The relationship between a
+subtask and its parent is not permanent and is broken at
+some point before the subtask is completed. To ensure every
+subtask is completed it is illegal to shift a task
+containing subtasks from section @dfn{NOW} to section
+@dfn{DONE}. Instead each subtask must be shifted
+individually. A consequence of this is that subtasks do not
+exist in section @dfn{DONE}.
+
+An alternative means of structuring a task or subtask is
+where the task consists of a number of components or steps,
+all of which must be completed before the task itself can be
+considered completed. This situation is best handled by
+means of an org-mode checkboxed list item in the task body
+for each component. Unlike subtasks, checkboxed items are
+tightly integrated into the task.
+
+@node Operations
+@chapter Operations
+@cindex Operations
 
 When point is on a task header or on any non-subtask content, an
 operation applies to the whole task including the subtasks. When
@@ -91,23 +148,12 @@ point is on a subtask, it applies to the subtask only. When a
 subtask is shifted it is detached from its parent and promoted to
 a task (by adjusting its header).
 
-An alternative approach to task breakdown is where the task
-consists of a number of 'components', all of which must be
-completed before the task itself can be considered completed.
-This situation is handled by means of an org-mode checkboxed list
-item in the task body for each component. The task header line
-can indicate the number or percentage of components currently
+Checkboxed task components. The task header line can
+indicate the number or percentage of components currently
 completed, and the task may be automatically shifted to DONE
-once all components have been checked (configurable). Unlike
-subtasks, the components are tightly integrated into the task.
+once all components have been checked (configurable).
 
-@node Data
-@chapter Data
-@cindex Data
 
-@node Operations
-@chapter Operations
-@cindex Operations
 
 @node Version Control
 @chapter Version Control
