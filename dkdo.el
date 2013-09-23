@@ -92,7 +92,7 @@ specified interval.")
  :tag "dkdo-RefreshSeconds"
  :type '(integer))
 
-( dkdo-mode-hook nil
+(defcustom dkdo-mode-hook nil
  (concat "Hooks called on entering " dkdo-ModeName ".")
  :tag "dkdo-mode-hook"
  :type '(hook :options (dkdo-SetCcKeys)))
