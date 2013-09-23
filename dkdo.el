@@ -43,11 +43,11 @@ all its checkboxes are ticked."
  :tag "dkdo-AutoFinishCheckedTasks"
  :type '(boolean))
 
-(defcustom dkdo-DefaultDoneTimestampLength dkmisc-TimeYmdhmLen
+(defcustom dkdo-DoneTimestampLength dkmisc-TimeYmdhmLen
  "Length of timestamps prefixed on insertion in DONE section.
 The length includes separator characters. Default is 16 for
 'YYYY-MM-DD HH:MM'"
- :tag "dkdo-DefaultDoneTimestampLength"
+ :tag "dkdo-DoneTimestampLength"
  :type '(integer))
 
 (defcustom dkdo-DueNoticeHours 9.0
@@ -92,7 +92,7 @@ specified interval.")
  :tag "dkdo-RefreshSeconds"
  :type '(integer))
 
-(defcustom dkdo-mode-hook nil
+( dkdo-mode-hook nil
  (concat "Hooks called on entering " dkdo-ModeName ".")
  :tag "dkdo-mode-hook"
  :type '(hook :options (dkdo-SetCcKeys)))
@@ -928,7 +928,7 @@ Return the value inserted (text form)."
    (if (not Timestamp)
     ; Default to current time and default length.
     (progn
-     (setq Ts (dkmisc-TimeCurrentText dkdo-DefaultDoneTimestampLength))))
+     (setq Ts (dkmisc-TimeCurrentText dkdo-DoneTimestampLength))))
    (dkdo-ToTaskContent)
    (insert Ts)
    (or (looking-at "[[:blank:]]") (insert " "))

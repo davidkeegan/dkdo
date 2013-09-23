@@ -77,7 +77,7 @@ alternative to org mode's TODO items feature.
 
 @menu
 * Introduction::
-* Structure::
+* Data::
 * Operations::
 * Version Control::
 * Concept Index::
@@ -122,9 +122,18 @@ your emacs profile (optional but recommended):
 Dkdo-mode can be customised via customisation group ``dk'',
 subgroup ``dkdo''.
 
-@node Structure
-@chapter Structure
-@cindex Structure
+@node Data
+@chapter Data
+@cindex Data
+
+@menu
+* File Structure::
+* Task Details::
+* Time Interval::
+@end menu
+
+@node File Structure
+@section File Structure
 
 A Do List is a single file using org-mode headlines for
 structure. It has three sections, @NOW{}, @LATER{}, and
@@ -198,6 +207,84 @@ tightly integrated into the task. The task headline line can
 indicate the number or percentage of components currently
 completed, and the task may be automatically moved to DONE
 once all components have been checked (configurable DkTbd).
+
+@node Task Details
+@section Task Details
+
+A task entry is a second level org-mode headline followed by
+optional content on succeeding lines. It has the components
+detailed below. Components are separated by whitespace.
+
+@verbatim
+<Prefix> [Completed] [Due [Repeater]] [Key:] HeadlineText.
+[Content]
+@end verbatim
+
+Where:
+
+@table @code
+@item Prefix
+An org-mode headline prefix, either @verb{**} for a task or
+@verb{***} for a subtask.
+
+@item Completed
+An ISO format (YYYY-MM-DD HH:MM) completion timestamp. This
+is prepended on entry to section @DONE{} and removed on exit
+from section @DONE{}, so it does not appear in other
+sections. The precision of the timestamp is customisable via
+variable @code{dkdo-DoneTimestampLength}.
+
+@item Due
+An ISO format (YYYY-MM-DD[ HH:MM:SS]) due timestamp
+indicating when the task is due to be completed. The
+timestamp is prepended or updated when a task is moved to
+section @LATER{}, and is retained when a task is moved to
+other sections.
+
+@item  Repeater
+An optional repetition interval which is only effective in
+section @LATER{}. @xref{Time Interval}.
+
+@item Key
+An optional key with a trailing colon. Useful for
+identifying related tasks. Not significant to dkdo-mode.
+
+@item HeadlineText
+Arbitrary text constituting the remainder of the headline.
+Ends with a newline.
+
+@item Content
+Optional task content. One or more lines of pretty much
+arbitrary text. May contain org-mode headlines of level
+three or lower, lists, checkboxes, etc. The task ends at the
+next second or first level org-mode headline.
+
+@end table
+
+@node Time Interval
+@section Time Interval
+
+A time interval is specified in the following format:
+
+@verbatim
+<Digits><Unit>
+@end verbatim
+
+Where:
+
+@table @code
+@item Digits
+An unsigned decimal integer. The unit must follow
+immediately without intervening space.
+
+@item Unit
+A single character from the following y (year), m (month) w
+(week), d (day), h (hour).
+@end table
+
+This is used as a repetition indicator on a task. It can
+also be used as a relative time input for a date in which
+case it may be preceded by a sign (+ or -).
 
 @node Operations
 @chapter Operations
@@ -342,11 +429,10 @@ differences:
 Only ISO dates (YYYY-MM-DD) are supported. DkTbd?
 
 @item
-Valid units for a relative time are h (hour), d (day), w
-(week), m (month), y (year).
+A relative time may be input. @xref{Time Interval}.
 
 @item
-The leading sign can be ommitted from a relative time,
+The leading sign can be omitted from a relative time,
 provided the unit is present. In that case the shift is
 presumed to be forward.
 
@@ -364,7 +450,7 @@ respect to the current task timestamp. DkTbd?
 @dkcmd{C-c C-x r, C-c r, dkdo-BufferRefresh}
 
 The primary function of this operation, and the only
-function when it is invoked by the Refresh Timer, is to
+function when it is invoked by the @ref{Refresh Timer}, is to
 scan section @LATER{} and move any tasks that have become
 due (ie whose due date has arrived or been passed) to
 section @NOW{}.
