@@ -138,16 +138,20 @@ subgroup ``dkdo''.
 A Do List is a single file using org-mode headlines for
 structure. It has three sections, @NOW{}, @LATER{}, and
 @DONE{}, in that order and each consisting of a top-level
-org-mode headline and its contents, which comprises a number
-of tasks.
+org-mode headline and its content, which comprises a number
+of tasks. A section begins at the beginning of a top level
+headline prefix, and finishes just before the next top level
+headline prefix in the file, or at the end of file.
 
 A task consists of an org-mode second level headline and its
-contents. A third-level headline within a task is a subtask.
-The task/subtask content starts immediately after the
-headline prefix and includes the remainder of the headline
-and any content, including any lower level sections (which
-are not significant to this mode), and other structural
-elements such as lists.
+content. It begins at the beginning of the second level
+headline prefix, and ends just before the beginning of the
+next second or top level headline prefix in the file, or at
+the end of file. The headline is the first line of the task,
+and subsequent lines, if any, are the @dfn{content}.
+
+A subtask is similar to a task except that it begins with a
+third level org-mode headline.
 
 For example, here is a minimal do list with a couple of
 tasks in section @NOW{} and empty @LATER{} and @DONE{}
@@ -292,6 +296,7 @@ case it may be preceded by a sign (+ or -).
 
 @menu
 * Operations Overview::
+* Start New File::
 * Start New Task::
 * Move to @DONE{}::
 * Move to @LATER{}::
@@ -347,6 +352,14 @@ subtask only. When a subtask is subject to a move operation,
 it is detached from its parent and promoted to a task (by
 adjusting its headline).
 
+@node Start New File
+@section Start New File
+
+When an empty or non-existent file is opened in dkdo-mode,
+sections @NOW{}, @LATER{}, and @DONE{} are inserted
+automatically by @code{dkdo-BufferPrepare} on confirmation
+by the user.
+
 @node Start New Task
 @section Start New Task
 
@@ -355,7 +368,7 @@ adjusting its headline).
 Inserts the headline prefix for a new task or subtask
 immediately after the current task/subtask, and positions
 point for editing the remainder of the headline and
-contents, if any.
+content, if any.
 
 @node Move to @DONE{}
 @section Move to @DONE{}
