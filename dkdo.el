@@ -173,7 +173,7 @@ DONE tasks are prefixed with a timestamp indicating the date of
 completion. Tasks can also be shifted DONE->NOW if they are being
 re-visited (the DONE timestamp is removed), or NOW-LATER to be
 deferred (eg pending some other event). A task shifting to LATER
-is prefixed with a new due date which is prompted for.
+is prefixed with a new due date (which is prompted for).
 
 The intent of a subtask is to allow related items to be collected
 and managed together and perhaps hidden from view util they are

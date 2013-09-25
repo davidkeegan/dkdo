@@ -66,13 +66,14 @@ Foundation GNU Free Documentation Licence.
 @ifnottex
 @node Top
 @top Do List Mode
-This mode facilitates maintaining a freely editable task
-list in a single file. It uses org mode's outlining,
-visibility cycling, and lists/checkboxes for structuring
-tasks, but in so far as it maintains the Do List in a
-separate document and allows for continuous re-ordering of
-tasks to reflect changing priorities, it provides an
-alternative to org mode's TODO items feature.
+Do List Mode facilitates maintaining a freely editable task
+list in a single file. It is based on org-mode, and org-mode
+features like outlining, visibility cycling, and
+lists/checkboxes are used for structuring tasks. However in
+so far as it maintains the Do List in a separate document
+and allows for continuous re-ordering of tasks to reflect
+changing priorities, it provides an alternative to org
+mode's TODO items feature.
 @end ifnottex
 
 @menu
@@ -160,8 +161,11 @@ sections:
 @smallformat
 @verbatim
 * NOW:
-** This is a Task:
+** This is a Task with two subtasks:
 - Do this thoroughly.
+*** Subtask1.
+*** Subtask2
+
 ** A second Task, with checkboxes [1/2]:
 - [X] Item 1.
 - [ ] Item 2.
@@ -178,7 +182,7 @@ urgent tasks closer to the beginning of the section.
 
 Section @LATER{} contains dated tasks, generally in
 reverse date order with the latest on top. Tasks which need
-to be performed or reviewed on a perticular date remain in
+to be performed or reviewed on a particular date remain in
 this section until they become due, when they are usually
 moved to section @NOW{} to be worked on (this move can
 be automatic). This section is also a useful home for tasks
@@ -195,11 +199,13 @@ collected and managed together and perhaps hidden from view
 util they are being worked on. The relationship between a
 subtask and its parent is not permanent and is broken at
 some point before the subtask is completed. To ensure every
-subtask is completed it is illegal to move a task
-containing subtasks from section @NOW{} to section
-@DONE{}. Instead each subtask must be moved
-individually. A consequence of this is that subtasks do not
-exist in section @DONE{}.
+subtask is completed individually, it is illegal to move a
+task containing subtasks from section @NOW{} to section
+@DONE{}. Instead each subtask must be moved individually. A
+consequence of this is that subtasks do not exist in section
+@DONE{}.
+
+DkTbd: Example of task with subtasks.
 
 An alternative means of structuring a task or subtask is
 where the task consists of a number of components or steps,
@@ -212,12 +218,17 @@ indicate the number or percentage of components currently
 completed, and the task may be automatically moved to DONE
 once all components have been checked (configurable DkTbd).
 
+DkTbd: Example of checkboxes.
+
 @node Task Details
 @section Task Details
 
-A task entry is a second level org-mode headline followed by
-optional content on succeeding lines. It has the components
-detailed below. Components are separated by whitespace.
+A task is a structured second level org-mode headline,
+followed by optional free-form content on succeeding lines.
+A subtask differs from a task only in that it has a
+different prefix. Headline components are separated by
+whitespace, and the headline is separated from the content
+by an endline. Task/subtask components are detailed below:
 
 @verbatim
 <Prefix> [Completed] [Due [Repeater]] [Key:] HeadlineText.
@@ -343,14 +354,22 @@ Start a new task or subtask after the current task subtask.
 @xref{Start New Task}.
 @end table
 
-Each move command applies to the @dfn{current} task, that is
-the task in whose headline or content point currently lies.
-When point is on a task headline or on any non-subtask
-content, an operation applies to the whole task including
-the subtasks. When point is on a subtask, it applies to the
-subtask only. When a subtask is subject to a move operation,
-it is detached from its parent and promoted to a task (by
-adjusting its headline).
+Each move command applies to the @dfn{current} task or
+subtask, that is the task or subtask in whose headline or
+content point currently lies.
+
+When point is in a subtask's headline or content, the
+subtask is moved, becomes detached from its parent task and
+is promoted to a task in its own right (by adjusting its
+headline prefix).
+
+On the other hand, when point is in a task's headline or
+content, but NOT on a subtask, a move applies to the task as
+a whole including any subtasks. A task containing subtasks
+can be moved from section @DONE{} to section @LATER{} and
+back, but it is not possible to move a task containing
+subtasks to @DONE{}, as each subtask must be completed and
+therefore moved to @DONE{} individually.
 
 @node Start New File
 @section Start New File
