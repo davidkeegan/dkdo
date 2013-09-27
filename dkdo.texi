@@ -1,7 +1,13 @@
 \input texinfo @c -*-texinfo-*-
 
+@c %**start of header
 @setfilename dkdo.info
 @settitle Do List Mode 0.4
+@c %**end of header
+
+@syncodeindex fn cp
+@syncodeindex vr cp
+@syncodeindex ky cp
 
 @c Before release, run C-u C-c C-u C-a
 @c (texinfo-all-menus-update with a prefix arg). This
@@ -28,13 +34,17 @@ Foundation GNU Free Documentation Licence.
 @end iftex
 
 @macro dkcmditem{key, key2, command}
-@kindex \key\
-@kindex \key2\
-@findex \command\
 @item @kbd{\key\}@tie{} (@kbd{\key2\}) (@code{\command\})
 @end macro
 
 @macro dkcmd{key, key2, command}
+@kbd{\key\}@tie{} (@kbd{\key2\}) (@code{\command\})
+@end macro
+
+@macro dkcmdidx{key, key2, command}
+@kindex \key\
+@kindex \key2\
+@findex \command\
 @kbd{\key\}@tie{} (@kbd{\key2\}) (@code{\command\})
 @end macro
 
@@ -81,12 +91,11 @@ mode's TODO items feature.
 * Data::
 * Operations::
 * Version Control::
-* Concept Index::
+* Index::
 @end menu
 
 @node Introduction
 @chapter Introduction
-@cindex Introduction
 
 @menu
 * Overview::
@@ -125,7 +134,6 @@ subgroup ``dkdo''.
 
 @node Data
 @chapter Data
-@cindex Data
 
 @menu
 * File Structure::
@@ -136,6 +144,7 @@ subgroup ``dkdo''.
 @node File Structure
 @section File Structure
 
+@cindex section
 A Do List is a single file using org-mode headlines for
 structure. It has three sections, @NOW{}, @LATER{}, and
 @DONE{}, in that order and each consisting of a top-level
@@ -144,13 +153,16 @@ of tasks. A section begins at the beginning of a top level
 headline prefix, and finishes just before the next top level
 headline prefix in the file, or at the end of file.
 
-A task consists of an org-mode second level headline and its
+@cindex task
+@cindex content, task
+A @dfn{task} consists of an org-mode second level headline and its
 content. It begins at the beginning of the second level
 headline prefix, and ends just before the beginning of the
 next second or top level headline prefix in the file, or at
 the end of file. The headline is the first line of the task,
 and subsequent lines, if any, are the @dfn{content}.
 
+@cindex subtask
 A subtask is similar to a task except that it begins with a
 third level org-mode headline.
 
@@ -194,6 +206,7 @@ where all tasks are prefixed with a timestamp representing
 the completion date. This section is generally sorted in
 chronological order and is useful as a historical record.
 
+@cindex subtask
 The intent of a subtask is to allow related items to be
 collected and managed together and perhaps hidden from view
 util they are being worked on. The relationship between a
@@ -207,6 +220,8 @@ consequence of this is that subtasks do not exist in section
 
 DkTbd: Example of task with subtasks.
 
+@cindex checkbox
+@cindex list
 An alternative means of structuring a task or subtask is
 where the task consists of a number of components or steps,
 all of which must be completed before the task itself can be
@@ -223,6 +238,8 @@ DkTbd: Example of checkboxes.
 @node Task Details
 @section Task Details
 
+@cindex task
+@cindex task, definition
 A task is a structured second level org-mode headline,
 followed by optional free-form content on succeeding lines.
 A subtask differs from a task only in that it has a
@@ -238,10 +255,14 @@ by an endline. Task/subtask components are detailed below:
 Where:
 
 @table @code
+@cindex prefix
 @item Prefix
 An org-mode headline prefix, either @verb{**} for a task or
 @verb{***} for a subtask.
 
+@cindex timestamp, completion
+@cindex completion timestamp
+@cindex task completion timestamp
 @item Completed
 An ISO format (YYYY-MM-DD HH:MM) completion timestamp. This
 is prepended on entry to section @DONE{} and removed on exit
@@ -249,6 +270,8 @@ from section @DONE{}, so it does not appear in other
 sections. The precision of the timestamp is customisable via
 variable @code{dkdo-DoneTimestampLength}.
 
+@cindex due timestamp
+@cindex timestamp, due
 @item Due
 An ISO format (YYYY-MM-DD[ HH:MM:SS]) due timestamp
 indicating when the task is due to be completed. The
@@ -256,10 +279,14 @@ timestamp is prepended or updated when a task is moved to
 section @LATER{}, and is retained when a task is moved to
 other sections.
 
+@cindex repeater
+@cindex repetition interval
 @item  Repeater
 An optional repetition interval which is only effective in
 section @LATER{}. @xref{Time Interval}.
 
+@cindex key, task
+@cindex task key
 @item Key
 An optional key with a trailing colon. Useful for
 identifying related tasks. Not significant to dkdo-mode.
@@ -268,6 +295,8 @@ identifying related tasks. Not significant to dkdo-mode.
 Arbitrary text constituting the remainder of the headline.
 Ends with a newline.
 
+@cindex content, task
+@cindex task content
 @item Content
 Optional task content. One or more lines of pretty much
 arbitrary text. May contain org-mode headlines of level
@@ -281,6 +310,7 @@ next second or first level org-mode headline.
 
 A time interval is specified in the following format:
 
+@cindex time interval
 @verbatim
 <Digits><Unit>
 @end verbatim
@@ -303,15 +333,14 @@ case it may be preceded by a sign (+ or -).
 
 @node Operations
 @chapter Operations
-@cindex Operations
 
 @menu
 * Operations Overview::
 * Start New File::
 * Start New Task::
-* Move to @DONE{}::
-* Move to @LATER{}::
-* Move to @NOW{}::
+* Move to DONE::
+* Move to LATER::
+* Move to NOW::
 * Entering Times::
 * Refresh Buffer::
 * Refresh Timer::
@@ -320,6 +349,7 @@ case it may be preceded by a sign (+ or -).
 @node Operations Overview
 @section Overview
 
+@cindex editing
 Normal (org-mode) editing commands are not restricted in any
 way, and indeed are necessary for initial entry of tasks
 into the dolist. You are free to make any changes you wish
@@ -332,21 +362,22 @@ Do List mode provides a number of commands which automate
 operations on tasks. These commands do respect and preserve
 the structure of the file:
 
+@c Force xrefs to following line.
 @table @asis
 @dkcmditem{C-c C-x d, C-c d, dkdo-TaskDone}
-Move the current task to section @DONE{}.
-@xref{Move to @DONE{}, DONE}.
+Move the current task to section @DONE{}. @w{                  }
+@xref{Move to DONE}.
 
 @dkcmditem{C-c C-x l, C-c l, dkdo-TaskToLater}
-Move the current task to section @LATER{}.
-@xref{Move to @LATER{}, LATER}.
+Move the current task to section @LATER{}. @w{                 }
+@xref{Move to LATER}.
 
 @dkcmditem{C-c C-x n, C-c n, dkdo-TaskToNow}
-Move the current task to section @NOW{}.
-@xref{Move to @NOW{}, NOW}.
+Move the current task to section @NOW{}. @w{                   }
+@xref{Move to NOW}.
 
 @dkcmditem{C-c C-x r, C-c r, dkdo-BufferRefresh}
-Refresh the buffer DkTbd: more.
+Refresh the buffer DkTbd: more. @w{                            }
 @xref{Refresh Buffer}.
 
 @dkcmditem{C-c C-x s, C-c s, dkdo-TaskStart}
@@ -354,6 +385,7 @@ Start a new task or subtask after the current task subtask.
 @xref{Start New Task}.
 @end table
 
+@cindex move command, application
 Each move command applies to the @dfn{current} task or
 subtask, that is the task or subtask in whose headline or
 content point currently lies.
@@ -374,6 +406,8 @@ therefore moved to @DONE{} individually.
 @node Start New File
 @section Start New File
 
+@cindex new file
+@cindex file, new
 When an empty or non-existent file is opened in dkdo-mode,
 sections @NOW{}, @LATER{}, and @DONE{} are inserted
 automatically by @code{dkdo-BufferPrepare} on confirmation
@@ -382,17 +416,19 @@ by the user.
 @node Start New Task
 @section Start New Task
 
-@dkcmd{C-c C-x s, C-c s, dkdo-TaskStart}
+@dkcmdidx{C-c C-x s, C-c s, dkdo-TaskStart}
 
+@cindex new task
+@cindex task, new
 Inserts the headline prefix for a new task or subtask
 immediately after the current task/subtask, and positions
 point for editing the remainder of the headline and
 content, if any.
 
-@node Move to @DONE{}
+@node Move to DONE
 @section Move to @DONE{}
 
-@dkcmd{C-c C-x d, C-c d, dkdo-TaskDone}
+@dkcmdidx{C-c C-x d, C-c d, dkdo-TaskDone}
 
 Moves the current task/subtask to section @DONE{},
 indicating that it has been completed. It is prefixed in
@@ -406,10 +442,10 @@ To change the completion timestamp, move the task from
 @DONE{} to @DONE{}. This operation prompts for a replacement
 timestamp. @xref{Entering Times}.
 
-@node Move to @LATER{}
+@node Move to LATER
 @section Move to @LATER{}
 
-@dkcmd{C-c C-x l, C-c l, dkdo-TaskToLater}
+@dkcmdidx{C-c C-x l, C-c l, dkdo-TaskToLater}
 
 Moves the current task/subtask to section @LATER{} and
 prompts for a due date/time which is prefixed to the task
@@ -419,16 +455,17 @@ This is the standard way to handle a task which needs to be
 placed on hold pending action by others, or which needs to
 be deferred for later consideration for some other reason.
 
+@cindex due date, entry of
 Also the standard way to enter a task with a due date is to
 insert it into section @NOW{} with @dkcmd{C-c C-x s, C-c s,
 dkdo-TaskStart}, edit it as required but omit a due date,
 and then move it to section @LATER{}, which will prompt for
 the due date.
 
-@node Move to @NOW{}
+@node Move to NOW
 @section Move to @NOW{}
 
-@dkcmd{C-c C-x n, C-c n, dkdo-TaskToNow}
+@dkcmdidx{C-c C-x n, C-c n, dkdo-TaskToNow}
 
 Moves the current task/subtask to section @NOW{}. A task is
 moved from section @LATER{} to section @NOW{} when it is to
@@ -447,6 +484,8 @@ is removed.
 @node Entering Times
 @section Entering Times
 
+@cindex date, entry of
+@cindex time, entry of
 Some move operations prompt for a date/time value, which is
 inserted as a prefix to the task headline. On moving to
 @LATER{}, it is the due date/time, usually in the future. On
@@ -468,6 +507,7 @@ The leading sign can be omitted from a relative time,
 provided the unit is present. In that case the shift is
 presumed to be forward.
 
+@cindex relative time, evaluation of
 @item
 A relative time is evaluated with respect to the current
 time when moving a task from @NOW{} to @LATER{} or from
@@ -479,13 +519,16 @@ respect to the current task timestamp. DkTbd?
 @node Refresh Buffer
 @section Refresh Buffer
 
-@dkcmd{C-c C-x r, C-c r, dkdo-BufferRefresh}
+@dkcmdidx{C-c C-x r, C-c r, dkdo-BufferRefresh}
 
+@cindex refresh, buffer
+@cindex buffer refresh
 The primary function of this operation, and the only
-function when it is invoked by the @ref{Refresh Timer}, is to
-scan section @LATER{} and move any tasks that have become
-due (ie whose due date has arrived or been passed) to
-section @NOW{}.
+function when it is invoked by the @ref{Refresh Timer}, is
+to scan section @LATER{} and move any tasks that have become
+due to section @NOW{}. A task is due when the current system
+time is greater than or equal to its due date. DkTbd:
+anticipation of due date.
 
 When invoked manually it also sorts tasks in each section,
 and folds tasks so only the task level headlines are
@@ -494,6 +537,8 @@ visible.
 @node Refresh Timer
 @section Refresh Timer
 
+@cindex refresh timer
+@cindex timer, refresh
 The Refresh Timer is started on entry to dkdo-mode if
 variable @code{dkdo-RefreshSeconds} has a value greater than
 zero. While running, the timer calls @code{dkdo-BufferRefresh}
@@ -511,10 +556,9 @@ You can stop the timer at any time with
 
 @node Version Control
 @chapter Version Control
-@cindex Version Control
 
-@node Concept Index
-@chapter Concept Index
+@node Index
+@chapter Index
 @printindex cp
 
 @bye
