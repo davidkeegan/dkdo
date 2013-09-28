@@ -12,25 +12,35 @@
 - [ ] Iron.
 - [ ] Put Away.
 - [ ] Shopping List.
-** 2013-09-22 Sm: Sheila re Dympna's bill [0/1]:
-- [ ] Dympna/Sheila to re-imburse Ok €160.00 re hotel bill.
-  - Receipt on file.
-
-* LATER:
-** 2013-09-20 1w Ssl: Restore [1/1]:
+** 2013-09-20 Ssl: Restore [1/1]:
 - [X] usRestore ${ig} Comment.
-** 2013-09-21 1m Dk: Reconcile MasterCard Statement [0/3]:
+** 2013-09-21 Dk: Reconcile MasterCard Statement [0/3]:
 - [ ] Reconcile in Accounts.
 - [ ] Post DD payment.
 - [ ] Discard matching slips.
-** 2013-09-21 3w Dk: Library renew/return 5B:
+** 2013-09-21 Dk: Library renew/return 5B:
 - Due 08-16.
+** 2013-09-22 Sm: Sheila re Dympna's bill [0/1]:
+- [ ] Dympna/Sheila to re-imburse Ok €160.00 re hotel bill.
+  - Receipt on file.
 ** 2013-09-22 Dk: Replace fridge door gasket [1/1]:
 - Model Bosch KGS3220GB/02.
 - Fridge compartment seal (mm) 580W x 830H.
 - Freezer compartments seal (mm) 580W x 680H.
 - [X] Search Internet for seal:
   - No exact match found.
+** 2013-09-27 Ssl: Restore [1/1]:
+- [X] usRestore ${ig} Comment.
+
+* LATER:
+** 2013-10-04 1w Ssl: Restore [1/1]:
+- [X] usRestore ${ig} Comment.
+** 2013-10-12 3w Dk: Library renew/return 5B:
+- Due 08-16.
+** 2013-10-21 1m Dk: Reconcile MasterCard Statement [0/3]:
+- [ ] Reconcile in Accounts.
+- [ ] Post DD payment.
+- [ ] Discard matching slips.
 
 * DONE:
 ** 2013-09-05 21:53 2013-09-06 Ssl: Restore [1/1]:

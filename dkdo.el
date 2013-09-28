@@ -13,8 +13,7 @@
 ;; This is a Do List mode for a user who likes to manipulate the
 ;; entries directly to adjust priorities. It uses org/outline mode to
 ;; make it easy to get an overview. Urgent tasks appear near the top
-;; of the file, and can be made to move automatically to the top of
-;; the file when they become due.
+;; of the file.
 ;; 
 ;;; Code:
 
@@ -50,30 +49,30 @@ The length includes separator characters. Default is 16 for
  :tag "dkdo-DoneTimestampLength"
  :type '(integer))
 
-(defcustom dkdo-DueNoticeHours 9.0
- "Hours before its timestamp when a task in section LATER becomes due.
+(defcustom dkdo-ActionableNoticeHours 9.0
+ "Hours before its due date when a task in LATER becomes actionable.
 The intent is to provide some prior notice of upcoming tasks to
 allow for preparation. As 'working' hours are needed for
-preparation, the time from `dkdo-DueSkipBeforeMidnight' hours
-before midnight to `dkdo-DueSkipAfterMidnight' hours after
-midnight is not included when calculating the due time."
- :tag "dkdo-DueNoticeHours"
+preparation, the time from `dkdo-ActionableSkipBeforeMidnight' hours
+before midnight to `dkdo-ActionableSkipAfterMidnight' hours after
+midnight is not included when calculating the actionable time."
+ :tag "dkdo-ActionableNoticeHours"
  :type '(float))
 
-(defcustom dkdo-DueSkipAfterMidnight 7.0
- "Hours after midnight to skip when calculating a task's due time.
+(defcustom dkdo-ActionableSkipAfterMidnight 7.0
+ "Hours after midnight to skip when calculating a task's actionable time.
 This period is not considered to be working time, and is
-therefore skipped when calculating the due time of a task in
+therefore skipped when calculating the actionable time of a task in
 section LATER."
- :tag "dkdo-DueSkipAfterMidnight"
+ :tag "dkdo-ActionableSkipAfterMidnight"
  :type '(float))
 
-(defcustom dkdo-DueSkipBeforeMidnight 3.0
- "Hours before midnight to skip when calculating a task's due time.
+(defcustom dkdo-ActionableSkipBeforeMidnight 3.0
+ "Hours before midnight to skip when calculating a task's actionable time.
 This period is not considered to be working time, and is
-therefore skipped when calculating the due time of a task in
+therefore skipped when calculating the actionable time of a task in
 section LATER."
- :tag "dkdo-DueSkipBeforeMidnight"
+ :tag "dkdo-ActionableSkipBeforeMidnight"
  :type '(float))
 
 (defcustom dkdo-Filename nil
@@ -395,8 +394,8 @@ Timer, with sort and other cosmetic adjustments disabled."
 
 (defun dkdo-BufferRefresh(&optional NoSort NoFixAppearance)
  "Scan the current buffer and perform various adjustments.
-Move tasks that have become due from section LATER to section
-NOW. If NOSORT is nil, sort tasks in the Do List sections. If
+Move actionable tasks from section LATER to section NOW. If
+NOSORT is nil, sort tasks in the Do List sections. If
 NOFIXAPPEARANCE is nil, perform task folding and other cosmetic
 adjustments."
  (interactive)
@@ -408,11 +407,11 @@ adjustments."
  (or NoSort (dkdo-SectionForeach 'dkdo-SectionSortMaybe))
  (if (dkdo-SectionPresent 'dkdo-Later)
   (let*
-   ((Moved (dkdo-LaterTasksDueToNow)))
+   ((Moved (dkdo-ActionableTasksLaterToNow)))
    (if (> Moved 0)
     (progn
      (dkmisc-Beep) 
-     (message "Found %d Task(s) due." Moved)))
+     (message "Found %d actionable Task(s) in LATER." Moved)))
    (or NoFixAppearance (dkdo-BufferFixAppearance)))))
 
 (defun dkdo-BufferCheckStructure()
@@ -594,8 +593,8 @@ If SECONDS is nil the location is at the section start."
       (setq Done t Target (dkdo-ToTaskEnd)))))
    (setq Target (point)))))
 
-(defun dkdo-LaterTasksDueToNow()
- "Move any due later entries to section NOW.
+(defun dkdo-ActionableTasksLaterToNow()
+ "Move actionable tasks from LATER to NOW.
 Return the number of tasks actually moved."
  ; Avoid unintentional processing of DONE tasks where DONE header is
  ; missing/corrupt.
@@ -607,7 +606,7 @@ Return the number of tasks actually moved."
    (if (and (dkdo-ToFirstTaskPosition 'dkdo-Later) (dkdo-TaskAtPoint))
     ; Traverse all later entries.
     (while (not Done)
-     (if (not (dkdo-TaskDue))
+     (if (not (dkdo-TaskActionable))
       (or (dkdo-ToNextTask) (setq Done t))
       (dkdo-TaskToNow)
       (setq Rv (+ Rv 1))
@@ -955,16 +954,16 @@ return nil if no timestamp or no repeater. "
        (dkdo-TaskInsertTimestamp NewTs)
        Rv)))))))
 
-(defun dkdo-TaskDue()
- "Return t if the current task is due."
+(defun dkdo-TaskActionable()
+ "Return t if the current task is actionable."
  (let*
   ((Tts (dkdo-TaskConvertTimestamp)))
-  (and Tts (dkdo-TimeDue Tts))))
+  (and Tts (dkdo-TimeActionable Tts))))
 
-(defun dkdo-TimeDue(Time)
- "Returns t if TIME is 'due'."
- (dkmisc-TimeDue Time (* dkdo-DueNoticeHours 3600)
-  dkdo-DueSkipBeforeMidnight dkdo-DueSkipAfterMidnight))
+(defun dkdo-TimeActionable(Time)
+ "Returns t if having due date TIME would render a task actionable."
+ (dkmisc-TimeActionable Time (* dkdo-ActionableNoticeHours 3600)
+  dkdo-ActionableSkipBeforeMidnight dkdo-ActionableSkipAfterMidnight))
 
 (defun dkdo-TaskMoveToSection(Section &optional Subtask)
  "Move the current task/subtask to the beginning of SECTION.
