@@ -317,8 +317,8 @@ Where:
 @table @code
 @cindex prefix
 @item Prefix
-An org-mode headline prefix, either @verb{**} for a task or
-@verb{***} for a subtask.
+An org-mode headline prefix, either @samp{**} for a task or
+@samp{***} for a subtask.
 
 @cindex timestamp, completion
 @cindex completion timestamp
@@ -469,16 +469,18 @@ therefore moved to @DONE{} individually.
 
 @cindex new file
 @cindex file, new
-When an empty or non-existent file is opened in dkdo-mode,
-sections @NOW{}, @LATER{}, and @DONE{} are inserted
-automatically by @code{dkdo-BufferPrepare} on confirmation
-by the user.
+When dkdo-mode starts on an empty buffer, it prompts the
+user with @samp{Empty dolist. Insert sections?} and on
+confirmation by the user calls @code{dkdo-BufferPrepare} to
+insert sections @NOW{}, @LATER{}, and @DONE{}.
 
 @cindex sample do list
 @cindex example do list
-To load some sample do list data, open an empty do list
-file, say ``no'' to insertion of sections, and then run
-@kbd{M-x} @code{dkdo-BufferLoadSample}.
+If the user rejects insertion of sections, dkdo-mode prompts
+the user with @samp{Empty dolist. Load sample do file?} and
+on confirmation calls @code{dkdo-BufferLoadSample} to load
+the sample do list file from the package directory into the
+current buffer.
 
 @node Start New Task
 @section Start New Task

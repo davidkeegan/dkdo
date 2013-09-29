@@ -445,13 +445,22 @@ user. Buffer must be empty to begin with."
  (eq (buffer-size) 0)
  (error "Cannot prepare this buffer! It's not empty!"))
 (if (yes-or-no-p "Empty dolist. Insert sections? ")
- (dkdo-SectionForeach
-  (lambda(Section)
-   (insert "\n")
-   (insert (concat (dkdo-SectionHeader Section) "\n"))))
+ (dkdo-BufferInsertSections)
  (if (yes-or-no-p "Empty dolist. Load sample do file? ")
   (dkdo-BufferLoadSample)))
 (goto-char (point-min)))
+
+(defun dkdo-BufferInsertSections()
+ "Load the dkdo package sample do file into the current buffer.
+Buffer must be empty to begin with."
+(interactive)
+(unless
+ (eq (buffer-size) 0)
+ (error "Need empty buffer to insert sections!"))
+(dkdo-SectionForeach
+ (lambda(Section)
+  (insert "\n")
+  (insert (concat (dkdo-SectionHeader Section) "\n")))))
 
 (defun dkdo-BufferLoadSample()
  "Load the dkdo package sample do file into the current buffer.
