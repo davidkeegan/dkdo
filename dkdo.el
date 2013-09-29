@@ -462,7 +462,8 @@ Buffer must be empty to begin with."
  (error "Need empty buffer to load sample!"))
 (unless dkdo-SampleDoFilename
  (error "Package Load Directory is unknown!"))
-(insert-file-contents dkdo-SampleDoFilename))
+(insert-file-contents dkdo-SampleDoFilename)
+(dkdo-BufferRefresh))
 
 (defun dkdo-BufferFixAppearance()
  "Fixe up the current buffer presentation."
