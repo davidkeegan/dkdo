@@ -474,6 +474,12 @@ sections @NOW{}, @LATER{}, and @DONE{} are inserted
 automatically by @code{dkdo-BufferPrepare} on confirmation
 by the user.
 
+@cindex sample do list
+@cindex example do list
+To load some sample do list data, open an empty do list
+file, say ``no'' to insertion of sections, and then run
+@kbd{M-x} @code{dkdo-BufferLoadSample}.
+
 @node Start New Task
 @section Start New Task
 

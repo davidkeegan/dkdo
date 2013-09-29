@@ -438,8 +438,9 @@ adjustments."
      "Cannot refresh until conflicts are resolved.")))))
 
 (defun dkdo-BufferPrepare()
- "Prepare the current buffer by creating necessary sections.
-Buffer must be empty to begin with."
+ "Prepare the current (empty) buffer.
+Inserts empty sections or loads a sample do file if confirmed by
+user. Buffer must be empty to begin with."
 (unless
  (eq (buffer-size) 0)
  (error "Cannot prepare this buffer! It's not empty!"))
@@ -447,7 +448,9 @@ Buffer must be empty to begin with."
  (dkdo-SectionForeach
   (lambda(Section)
    (insert "\n")
-   (insert (concat (dkdo-SectionHeader Section) "\n")))))
+   (insert (concat (dkdo-SectionHeader Section) "\n"))))
+ (if (yes-or-no-p "Empty dolist. Load sample do file? ")
+  (dkdo-BufferLoadSample)))
 (goto-char (point-min)))
 
 (defun dkdo-BufferLoadSample()
