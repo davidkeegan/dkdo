@@ -453,6 +453,7 @@ Buffer must be empty to begin with."
 (defun dkdo-BufferLoadSample()
  "Load the dkdo package sample do file into the current buffer.
 Buffer must be empty to begin with."
+(interactive)
 (unless
  (eq (buffer-size) 0)
  (error "Need empty buffer to load sample!"))
