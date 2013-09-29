@@ -112,7 +112,8 @@ visibility and supports deferred and recurring tasks.
 @node Getting Started
 @section Getting Started
 
-To enable dkdo-mode, add this line to your emacs profile:
+To enable dkdo-mode for files with suffix @file{.do}, add
+this line to your emacs profile:
 
 @lisp
 (add-to-list 'auto-mode-alist '("\\.do$" . dkdo-mode))
@@ -126,6 +127,10 @@ your emacs profile (optional but recommended):
 @lisp
 (add-hook 'dkdo-mode-hook 'dkdo-SetCcKeys)
 @end lisp
+
+To load some sample data, open an empty file in dkdo-mode,
+respond @samp{no} to the @samp{insert sections} prompt,
+and respond @samp{yes} to the @samp{load sample} prompt.
 
 Dkdo-mode can be customised via customisation group ``dk'',
 subgroup ``dkdo''.
@@ -471,16 +476,16 @@ therefore moved to @DONE{} individually.
 @cindex file, new
 When dkdo-mode starts on an empty buffer, it prompts the
 user with @samp{Empty dolist. Insert sections?} and on
-confirmation by the user calls @code{dkdo-BufferPrepare} to
+confirmation calls function @code{dkdo-BufferPrepare} to
 insert sections @NOW{}, @LATER{}, and @DONE{}.
 
 @cindex sample do list
 @cindex example do list
 If the user rejects insertion of sections, dkdo-mode prompts
 the user with @samp{Empty dolist. Load sample do file?} and
-on confirmation calls @code{dkdo-BufferLoadSample} to load
-the sample do list file from the package directory into the
-current buffer.
+on confirmation calls function @code{dkdo-BufferLoadSample}
+to load the sample do list file from the package directory
+into the current buffer.
 
 @node Start New Task
 @section Start New Task
@@ -621,7 +626,7 @@ conflict marker can be customised via variable
 @cindex timer, refresh
 The Refresh Timer is started on entry to dkdo-mode if
 variable @code{dkdo-RefreshSeconds} has a value greater than
-zero. While running, the timer calls
+zero. While running, the timer calls function
 @code{dkdo-BufferRefresh} periodically at the specified
 interval to move any actionable tasks from section @LATER{}
 to section @NOW{}. @xref{Actionable}.

@@ -601,6 +601,7 @@ a subtask."
 
 (defun dkdo-SectionFindInsertPoint(Section Seconds)
  "Find the location in SECTION for a task with the specified time/date.
+Location is after existing task with same date.
 If SECONDS is nil the location is at the section start."
  (save-excursion
   (let*
