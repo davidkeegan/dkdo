@@ -113,6 +113,16 @@ specified interval.")
 (defconst dkdo-PrefixSubtask "*** ")
 (defconst dkdo-ReSubtask "^\\*\\*\\* ")
 
+(defconst dkdo-PackageDirectory
+ (if load-file-name
+  (file-name-directory load-file-name)
+  nil))
+
+(defconst dkdo-SampleDoFilename
+ (if dkdo-PackageDirectory
+  (expand-file-name "sample.do" dkdo-PackageDirectory)
+  nil))
+
 (defconst dkdo-Sections
  '((dkdo-Now . "NOW")
    (dkdo-Later . "LATER")
@@ -423,7 +433,9 @@ adjustments."
  (save-excursion
   (goto-char (point-min))
   (if (re-search-forward dkmisc-ConflictMarkerRe nil t)
-   (error "File has merge conflicts! Cannot refresh."))))
+   (error
+    (concat "File has merge conflicts! "
+     "Cannot refresh until conflicts are resolved.")))))
 
 (defun dkdo-BufferPrepare()
  "Prepare the current buffer by creating necessary sections.
@@ -437,6 +449,16 @@ Buffer must be empty to begin with."
    (insert "\n")
    (insert (concat (dkdo-SectionHeader Section) "\n")))))
 (goto-char (point-min)))
+
+(defun dkdo-BufferLoadSample()
+ "Load the dkdo package sample do file into the current buffer.
+Buffer must be empty to begin with."
+(unless
+ (eq (buffer-size) 0)
+ (error "Need empty buffer to load sample!"))
+(unless dkdo-SampleDoFilename
+ (error "Package Load Directory is unknown!"))
+(insert-file-contents dkdo-SampleDoFilename))
 
 (defun dkdo-BufferFixAppearance()
  "Fixe up the current buffer presentation."

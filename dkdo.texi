@@ -82,7 +82,6 @@ Foundation GNU Free Documentation Licence.
 * Introduction::
 * Data::
 * Operations::
-* Version Control::
 * Index::
 @end menu
 
@@ -172,8 +171,9 @@ task, and subsequent lines, if any, are the @dfn{content}.
 @xref{Task Details}.
 
 @cindex subtask
-A subtask is similar to a task except that it begins with a
-third level org-mode headline. @xref{Task Details}.
+A subtask is similar to a task (see above) except that it
+begins with a third level org-mode headline. @xref{Task
+Details}.
 
 For example, here is a minimal do list with a couple of
 tasks in section @NOW{} and empty @LATER{} and @DONE{}
@@ -232,7 +232,7 @@ chronological order and is useful as a historical record.
 
 @node Subtasks
 @section Subtasks
-@cindex subtask
+@cindex subtask, intent
 The intent of a subtask is to allow related items to be
 collected and managed together and perhaps hidden from view
 util they are being worked on. The relationship between a
@@ -536,6 +536,7 @@ place after the move. While this move can be invoked
 manually, it is usually triggered automatically by
 @dkcmd{C-c C-x r, C-c r, dkdo-BufferRefresh} for tasks in
 section @LATER{} which have become actionable.
+
 @xref{Actionable}.
 
 A completed task is moved from section @LATER{} to section
@@ -586,13 +587,24 @@ respect to the current task timestamp. DkTbd?
 @cindex refresh, buffer
 @cindex buffer refresh
 The primary function of this operation, and the only
-function when it is invoked by the @ref{Refresh Timer}, is
-to scan section @LATER{} and move any tasks that have become
-actionable to section @NOW{}. @xref{Actionable}. 
+function when it is invoked by the Refresh Timer
+(@pxref{Refresh Timer}), is to scan section @LATER{} and
+move any tasks that have become actionable to section
+@NOW{}. @xref{Actionable}.
 
-When invoked manually it also sorts tasks in each section,
+When invoked manually, it also sorts tasks in each section,
 and folds tasks so only the task level headlines are
 visible.
+
+@cindex conflict marker
+@cindex version control
+If @code{dkdo-BufferRefresh} finds a version control
+conflict marker in the file it emits an error message and
+makes no changes to the file. This gives the user a chance
+to reslove conflicts first. The regular expression for a
+conflict marker can be customised via variable
+@code{dkmisc-ConflictMarkerRe} in customisation group
+@code{dkmisc}.
 
 @node Refresh Timer
 @section Refresh Timer
@@ -614,9 +626,6 @@ appropriate.
 
 You can stop the timer at any time with
 @code{dkdo-RefreshTimerStop}.
-
-@node Version Control
-@chapter Version Control
 
 @node Index
 @chapter Index
