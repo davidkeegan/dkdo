@@ -2,7 +2,7 @@
 
 @c %**start of header
 @setfilename dkdo.info
-@settitle Do List Mode 0.4
+@settitle Do List Mode 1.0
 @c %**end of header
 
 @syncodeindex fn cp
@@ -121,8 +121,8 @@ this line to your emacs profile:
 
 Dkdo-mode mode binds a number of @kbd{C-c C-x <key>}
 sequences. To bind the corresponding (shorter) @kbd{C-c
-<key>} sequences in dkdo-mode, add the following line to
-your emacs profile (optional but recommended):
+<key>} sequences (in dkdo-mode only), add the following line
+to your emacs profile (optional but recommended):
 
 @lisp
 (add-hook 'dkdo-mode-hook 'dkdo-SetCcKeys)
@@ -132,8 +132,8 @@ To load some sample data, open an empty file in dkdo-mode,
 respond @samp{no} to the @samp{insert sections} prompt,
 and respond @samp{yes} to the @samp{load sample} prompt.
 
-Dkdo-mode can be customised via customisation group ``dk'',
-subgroup ``dkdo''.
+Dkdo-mode can be customised via customisation group @code{dk},
+subgroup @code{dkdo}.
 
 @node Known Issues
 @section Known Issues
@@ -149,7 +149,7 @@ All timestamps in the do list must be in ISO format
 * Sections and Tasks::
 * Subtasks::
 * Checkboxes::
-* Task Details::
+* Task/Subtask Details::
 * Time Interval::
 @end menu
 
@@ -161,28 +161,26 @@ A Do List is a single file using org-mode headlines for
 structure. It has three sections, @NOW{}, @LATER{}, and
 @DONE{}, in that order and each consisting of a top-level
 org-mode headline and its content, which comprises a number
-of tasks. A section begins at the beginning of a top level
+of tasks. A @dfn{section} begins at the beginning of a top level
 headline prefix, and finishes just before the next top level
 headline prefix in the file, or at the end of file.
 
 @cindex task
 @cindex content, task
-A @dfn{task} consists of an org-mode second level headline
-and its content. It begins at the beginning of the second
-level headline prefix, and ends just before the beginning of
-the next second or top level headline prefix in the file, or
-at the end of file. The headline is the first line of the
-task, and subsequent lines, if any, are the @dfn{content}.
-@xref{Task Details}.
+A @dfn{task} consists of a structured org-mode second level
+headline and its content. It begins at the beginning of the
+second level headline prefix, and ends just before the
+beginning of the next second or top level headline prefix in
+the file, or at the end of file. The headline is the first
+line of the task, and subsequent lines, if any, are the
+@dfn{content}. See also @ref{Task/Subtask Details}.
 
 @cindex subtask
 A subtask is similar to a task (see above) except that it
-begins with a third level org-mode headline. @xref{Task
-Details}.
+begins with a third level org-mode headline.
+@xref{Task/Subtask Details}.
 
-For example, here is a minimal do list with a couple of
-tasks in section @NOW{} and empty @LATER{} and @DONE{}
-sections:
+For example, here is a do list with tasks in all sections:
 
 @smallformat
 @verbatim
@@ -194,11 +192,11 @@ This one is really urgent.
 - Needs to be done quickly.
 
 * LATER:
-** 2013-09-29 Kk: This task is due 29 September.
-** 2013-10-04 Kk: This task is due 4 October.
+** 2013-09-29 This task is due 29 September.
+** 2013-10-04 This task is due 4 October.
 
 * DONE:
-** 2013-09-28 08:17 Dk: This task was completed 28 September.
+** 2013-09-28 08:17 This task was completed 28 September.
 
 @end verbatim
 @end smallformat
@@ -206,19 +204,25 @@ This one is really urgent.
 @node Sections and Tasks
 @section Sections and Tasks
 
-Urgent tasks and tasks currently being worked on live in
+Urgent tasks and tasks currently being worked on belong in
 section @NOW{}. It is usually convenient to keep the most
 urgent tasks closer to the beginning of the section.
+Ordering is left to the user and section @NOW{} is not
+sorted automatically, but tasks are inserted chronologically
+with respect to existing dated tasks starting from the
+beginning of the section.
 
 Section @LATER{} contains tasks which have a due date, and
-is generally maintained in reverse date order with the most
-recent on top. Tasks which need to be performed or reviewed
-by a particular date remain in this section until they
-become actionable, when they are usually moved to section
-@NOW{} to be worked on (this move can be automatic). This
-section is also a useful home for tasks which are on hold
-pending action by others, and tasks which have been deferred
-for later consideration.
+is sorted in chronological order by due date (ie with the
+most urgent tasks near the top). Calendar appointments and
+tasks which need to be performed or reviewed by a particular
+date remain in this section until they become actionable,
+and are usually then moved to section @NOW{} to be worked on
+(this move can be automatic).
+
+Section @LATER{} is also a useful home for tasks which are
+on hold pending action by others, and tasks which have been
+deferred for later consideration.
 
 @anchor{Actionable}
 @cindex actionable
@@ -230,24 +234,30 @@ consist of working hours only via customisable variables
 @code{dkdo-ActionableSkipAfterMidnight} and
 @code{dkdo-ActionableSkipBeforeMidnight}.
 
-Once completed, tasks are moved to the @DONE{} section,
-where all tasks are prefixed with a timestamp representing
-the completion date. This section is generally sorted in
-chronological order and is useful as a historical record.
+Once completed, tasks are moved to section @DONE{}, where
+all tasks are prefixed with a timestamp representing the
+completion date. This section is useful as a historical
+record, and is sorted in chronological order by completion
+date.
 
 @node Subtasks
 @section Subtasks
 @cindex subtask, intent
 The intent of a subtask is to allow related items to be
 collected and managed together and perhaps hidden from view
-util they are being worked on. The relationship between a
-subtask and its parent is not permanent and is broken at
-some point before the subtask is completed. To ensure every
-subtask is completed individually, it is illegal to move a
-task containing subtasks from section @NOW{} to section
-@DONE{}. Instead each subtask must be moved individually. A
-consequence of this is that subtasks do not exist in section
-@DONE{}. @xref{Task Details}.
+util they are being worked on.
+
+When a task with subtasks is moved, its subtasks, if any,
+are also moved. However when a subtask is moved individually
+it is detached from its parent and is promoted to a task.
+Thus the relationship between a subtask and its parent is
+not permanent.
+
+To ensure every subtask is completed individually, it is
+illegal to move a task containing subtasks to section
+@DONE{}. Instead each of its subtasks must be moved
+individually. A consequence of this is that subtasks should
+not exist in section @DONE{}. @xref{Task/Subtask Details}.
 
 For example, here is a task with subtasks:
 
@@ -300,20 +310,23 @@ DONE once all components have been checked (customisable via
 @end verbatim
 @end smallformat
 
-@node Task Details
-@section Task Details
+@node Task/Subtask Details
+@section Task/Subtask Details
 
 @cindex task, details
 @cindex task, definition
 A task is a structured second level org-mode headline,
 followed by optional free-form content on succeeding lines.
-A subtask differs from a task only in that it has a
-different prefix. Headline components are separated by
-whitespace, and the headline is separated from the content
-by an endline. Task/subtask components are detailed below:
+A subtask differs from a task only in that it has a third
+level headline prefix.
+
+A task/subtask headline is structured and has a number of
+components. Headline components are separated by whitespace,
+and the headline is terminated by a newline. Task/subtask
+components are detailed below:
 
 @verbatim
-<Prefix> [Completed] [Due [Repeater]] [Key:] HeadlineText.
+<Prefix> [Completed] [Due [Repetition]] [Key:] HeadlineText.
 [Content]
 @end verbatim
 
@@ -329,32 +342,34 @@ An org-mode headline prefix, either @samp{**} for a task or
 @cindex completion timestamp
 @cindex task completion timestamp
 @item Completed
-An ISO format (YYYY-MM-DD HH:MM) completion timestamp. This
-is prepended on entry to section @DONE{} and removed on exit
-from section @DONE{}, so it does not appear in other
-sections. The precision of the timestamp is customisable via
-variable @code{dkdo-DoneTimestampLength}.
+An ISO format (@samp{YYYY-MM-DD HH:MM}) completion
+timestamp. This is prepended on entry to section @DONE{} and
+removed on exit from section @DONE{}, so it does not appear
+in other sections. The precision of the timestamp is
+customisable via variable @code{dkdo-DoneTimestampLength}.
 
 @cindex due timestamp
 @cindex timestamp, due
 @item Due
-An ISO format (YYYY-MM-DD[ HH:MM:SS]) due timestamp
+An ISO format (@samp{YYYY-MM-DD[HH:MM:SS]}) due timestamp
 indicating when the task is due to be completed. The
 timestamp is prepended or updated when a task is moved to
 section @LATER{}, and is retained when a task is moved to
-other sections.
+other sections. If any of @samp{HH:MM:SS} are omitted,
+zeroes are assumed.
 
 @cindex repeater
 @cindex repetition interval
-@item  Repeater
-An optional repetition interval which is only effective in
-section @LATER{}. @xref{Time Interval}.
+@item  Repetition
+An optional repetition interval which is acted on only in
+the event of a move from section @LATER{}. See @ref{Time Interval}
+and @ref{Recurrent Tasks}.
 
 @cindex key, task
 @cindex task key
 @item Key
 An optional key with a trailing colon. Useful for
-identifying related tasks. Not significant to dkdo-mode.
+identifying related tasks. Not acted on by @code{dkdo-mode}.
 
 @item HeadlineText
 Arbitrary text constituting the remainder of the headline.
@@ -392,9 +407,9 @@ A single character from the following y (year), m (month) w
 (week), d (day), h (hour).
 @end table
 
-This is used as a repetition indicator on a task. It can
-also be used as a relative time input for a date in which
-case it may be preceded by a sign (+ or -).
+This is used as a repetition interval on a recurrent task.
+It can also be used as a relative time input for a date in
+which case it may be preceded by a sign (+ or -).
 
 @node Operations
 @chapter Operations
@@ -406,6 +421,7 @@ case it may be preceded by a sign (+ or -).
 * Move to DONE::
 * Move to LATER::
 * Move to NOW::
+* Recurrent Tasks::
 * Entering Times::
 * Refresh Buffer::
 * Refresh Timer::
@@ -424,8 +440,8 @@ reasonable care to avoid such changes as unexpected outcomes
 are likely.
 
 Do List mode provides a number of commands which automate
-operations on tasks. These commands do respect and preserve
-the structure of the file:
+operations on tasks and/or subtasks. These commands respect
+and preserve the structure of the file as a do list:
 
 @c Force xrefs to following line.
 @table @asis
@@ -446,7 +462,7 @@ Refresh the buffer. @w{                                           }
 @xref{Refresh Buffer}.
 
 @dkcmditem{C-c C-x s, C-c s, dkdo-TaskStart}
-Start a new task or subtask after the current task subtask.
+Start a new task or subtask after the current task or subtask.
 @xref{Start New Task}.
 @end table
 
@@ -484,7 +500,7 @@ insert sections @NOW{}, @LATER{}, and @DONE{}.
 If the user rejects insertion of sections, dkdo-mode prompts
 the user with @samp{Empty dolist. Load sample do file?} and
 on confirmation calls function @code{dkdo-BufferLoadSample}
-to load the sample do list file from the package directory
+to load a sample do list file from the package directory
 into the current buffer.
 
 @node Start New Task
@@ -496,8 +512,8 @@ into the current buffer.
 @cindex task, new
 Inserts the headline prefix for a new task or subtask
 immediately after the current task/subtask, and positions
-point for editing the remainder of the headline and
-content, if any.
+point for editing the remainder of the headline and its
+content (if any).
 
 @node Move to DONE
 @section Move to @DONE{}
@@ -507,14 +523,15 @@ content, if any.
 Moves the current task/subtask to section @DONE{},
 indicating that it has been completed. It is prefixed in
 section @DONE{} with the current time as a timestamp
-representing the completion date. Should a task need to be
-re-visited after completion, it can be moved to section
-@NOW{} or section @LATER{}, which causes the completion
-timestamp to be removed.
+representing the completion date, and is inserted in the
+appropriate chronological position by completion date.
+Should a task need to be re-visited after completion, it can
+be moved to section @NOW{} or section @LATER{}, which causes
+the completion timestamp to be removed.
 
-To change the completion timestamp, move the task from
-@DONE{} to @DONE{}. This operation prompts for a replacement
-timestamp. @xref{Entering Times}.
+To change a completion timestamp in section @DONE{}, move
+the task from @DONE{} to @DONE{}. This operation prompts for
+a replacement completion timestamp. @xref{Entering Times}.
 
 @node Move to LATER
 @section Move to @LATER{}
@@ -523,7 +540,8 @@ timestamp. @xref{Entering Times}.
 
 Moves the current task/subtask to section @LATER{} and
 prompts for a due date/time which is prefixed to the task
-headline. @xref{Entering Times}.
+headline. The task is inserted in the appropriate
+chronological position by due date. @xref{Entering Times}.
 
 This is the standard way to handle a task which needs to be
 placed on hold pending action by others, or which needs to
@@ -536,26 +554,51 @@ dkdo-TaskStart}, edit it as required but omit a due date,
 and then move it to section @LATER{}, which will prompt for
 the due date.
 
+To change a due date in section @LATER{}, move the task from
+section @LATER{} to section @LATER{}, and enter the new due
+date at the prompt.
+
 @node Move to NOW
 @section Move to @NOW{}
 
 @dkcmdidx{C-c C-x n, C-c n, dkdo-TaskToNow}
 
-Moves the current task/subtask to section @NOW{}. A task is
-moved from section @LATER{} to section @NOW{} when it is to
-be worked on, either because its due date is imminent, or
-for some other reason. The task due date prefix remains in
-place after the move. While this move can be invoked
-manually, it is usually triggered automatically by
+Moves the current task/subtask to section @NOW{}. The
+chronological insert position is found by comparing its due
+date with the due dates, if present, of existing tasks in
+section @NOW{}, starting from the top.
+
+A task is moved from section @LATER{} to section @NOW{} when
+it is to be worked on, either because its due date is
+imminent, or for some other reason. The task due date prefix
+remains in place after the move. While this move can be
+invoked manually, it is usually triggered automatically by
 @dkcmd{C-c C-x r, C-c r, dkdo-BufferRefresh} for tasks in
 section @LATER{} which have become actionable.
 
+A task is moved from section @DONE{} to section @NOW{} if it
+needs to be revisited after completion.
+
 @xref{Actionable}.
 
-A completed task is moved from section @LATER{} to section
-@NOW{} in the event that it needs to be revisited and worked
-on some more. In this case the task's completion date prefix
-is removed.
+A previously completed task is moved from section @DONE{} to
+section @NOW{} in the event that it needs to be revisited
+and worked on some more. In this case the task's completion
+date prefix is removed.
+
+@node Recurrent Tasks
+@section Recurrent Tasks
+
+A @dfn{recurrent task} has a repetition interval after the
+due date. @xref{Time Interval}.
+
+Before a task with a repetition interval is moved from
+section @LATER{} to a different section, it is cloned. The
+repetition interval is removed from one copy, and that copy
+is moved to the target section. The due date of the second
+copy is shifted forward in time by the repetition interval
+and the copy is moved to the appropriate new chronological
+position in section @LATER{}.
 
 @node Entering Times
 @section Entering Times
@@ -564,12 +607,12 @@ is removed.
 @cindex time, entry of
 Some move operations prompt for a date/time value, which is
 inserted as a prefix to the task headline. On moving to
-@LATER{}, it is the due date/time, usually in the future. On
-moving from @DONE{} to @DONE{} it is the completion date,
-usually in the past.
+@LATER{}, the input value is the due timestamp, usually in
+the future. On moving from @DONE{} to @DONE{} it is the
+completion timestamp, usually in the past.
 
-Time input is as for @code{org-read-date} but with some
-differences:
+Time input is as for function @code{org-read-date} but with
+some differences:
 
 @enumerate
 @item
@@ -585,11 +628,11 @@ presumed to be forward.
 
 @cindex relative time, evaluation of
 @item
-A relative time is evaluated with respect to the current
-time when moving a task from @NOW{} to @LATER{} or from
-@DONE{} to @LATER{}. However when moving from @LATER{}
-to @LATER or from @DONE{} to @LATER{} it is evaluated with
-respect to the current task timestamp. DkTbd?
+If a relative or partial time entered, it is evaluated with
+respect to the current time when moving a task from @NOW{}
+to @LATER{} or from @DONE{} to @LATER{}. However when moving
+from @LATER{} to @LATER or from @DONE{} to @DONE{} it is
+evaluated with respect to the current task timestamp.
 @end enumerate
 
 @node Refresh Buffer
@@ -605,9 +648,10 @@ function when it is invoked by the Refresh Timer
 move any tasks that have become actionable to section
 @NOW{}. @xref{Actionable}.
 
-When invoked manually, it also sorts tasks in each section,
-and folds tasks so only the task level headlines are
-visible.
+When invoked manually, it also sorts tasks in sections
+@LATER{} and @DONE{}, and folds tasks in all sections so
+only the task level headlines are visible, and task content
+is invisible.
 
 @cindex conflict marker
 @cindex version control

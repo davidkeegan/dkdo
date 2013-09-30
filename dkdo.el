@@ -894,11 +894,11 @@ Return the repeater as per `dkmisc-TimeParseShift', or nil if none."
  "Prompt for a timestamp for the current task.
 Return the new timestamp in text form. Use value of any existing
 timestamp as the base for partial/relative input unless IGNORE is
-set, in which case use the current time instead. If LENGTH is
-specified it overrides the length of any current timestamp as a
-default for the length/precision of the returned timestamp. The
-actual returned length may be longer to accomodate the precision
-of the user input."
+set, in which case use the current time as a base instead. If
+LENGTH is specified it overrides the length of any current
+timestamp as a default for the length/precision of the returned
+timestamp. The actual returned length may be longer to accomodate
+the precision of the user input."
  (let*
   ((OldTs (dkdo-TaskGetTimestamp))
    (Len (if Length Length (if OldTs (length OldTs) dkmisc-TimeYmdLen)))
