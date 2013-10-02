@@ -92,6 +92,7 @@ Foundation GNU Free Documentation Licence.
 * Overview::
 * Getting Started::
 * Known Issues::
+* History::
 @end menu
 
 @node Overview
@@ -140,6 +141,12 @@ subgroup @code{dkdo}.
 
 All timestamps in the do list must be in ISO format
 (YYYY-MM-DD). Other formats are not supported.
+
+@node History
+@section History
+
+This package was written between 2010-07-23 and 2010-11-24
+to replace manual editing of a similarly structured do file.
 
 @node Data
 @chapter Data
@@ -196,7 +203,7 @@ This one is really urgent.
 ** 2013-10-04 This task is due 4 October.
 
 * DONE:
-** 2013-09-28 08:17 This task was completed 28 September.
+** 2013-09-28 08:17 This task was completed 28 September at 08:17.
 
 @end verbatim
 @end smallformat
@@ -299,7 +306,7 @@ DONE once all components have been checked (customisable via
 @verbatim
 * NOW:
 
-** This is a Task with a checkboxed list [0/2]:
+** This is a Task with a checkboxed lists [0/2]:
 - [ ] Item1.
       Content of Subtask1.
 - [ ] Item with subitems [0/3]:
@@ -363,7 +370,7 @@ zeroes are assumed.
 @item  Repetition
 An optional repetition interval which is acted on only in
 the event of a move from section @LATER{}. See @ref{Time Interval}
-and @ref{Recurrent Tasks}.
+and @ref{Recurring Tasks}.
 
 @cindex key, task
 @cindex task key
@@ -407,7 +414,7 @@ A single character from the following y (year), m (month) w
 (week), d (day), h (hour).
 @end table
 
-This is used as a repetition interval on a recurrent task.
+This is used as a repetition interval on a recurring task.
 It can also be used as a relative time input for a date in
 which case it may be preceded by a sign (+ or -).
 
@@ -421,7 +428,7 @@ which case it may be preceded by a sign (+ or -).
 * Move to DONE::
 * Move to LATER::
 * Move to NOW::
-* Recurrent Tasks::
+* Recurring Tasks::
 * Entering Times::
 * Refresh Buffer::
 * Refresh Timer::
@@ -586,10 +593,10 @@ section @NOW{} in the event that it needs to be revisited
 and worked on some more. In this case the task's completion
 date prefix is removed.
 
-@node Recurrent Tasks
-@section Recurrent Tasks
+@node Recurring Tasks
+@section Recurring Tasks
 
-A @dfn{recurrent task} has a repetition interval after the
+A @dfn{recurring task} has a repetition interval after the
 due date. @xref{Time Interval}.
 
 Before a task with a repetition interval is moved from
@@ -599,6 +606,45 @@ is moved to the target section. The due date of the second
 copy is shifted forward in time by the repetition interval
 and the copy is moved to the appropriate new chronological
 position in section @LATER{}.
+
+For example in the following dolist the task in section
+@LATER{} due on 2013-09-21 is recurring monthly.
+
+@smallformat
+@verbatim
+* NOW:
+
+* LATER:
+** 2013-09-21 1m Reconcile Bank Account [/]:
+- [ ] Download and print statement.
+- [ ] Reconcile in accounts.
+** 2013-09-24 Other task.
+
+* DONE:
+
+When the recurring task is becomes actionable the do list is
+adjusted as follows:
+
+@end verbatim
+@end smallformat
+
+@smallformat
+@verbatim
+* NOW:
+** 2013-09-21 Reconcile Bank Account [/]:
+- [ ] Download and print statement.
+- [ ] Reconcile in accounts.
+
+* LATER:
+** 2013-09-24 Other task.
+** 2013-10-21 1m Reconcile Bank Account [/]:
+- [ ] Download and print statement.
+- [ ] Reconcile in accounts.
+
+* DONE:
+
+@end verbatim
+@end smallformat
 
 @node Entering Times
 @section Entering Times
@@ -658,7 +704,7 @@ is invisible.
 If @code{dkdo-BufferRefresh} finds a version control
 conflict marker in the file it emits an error message and
 makes no changes to the file. This gives the user a chance
-to reslove conflicts first. The regular expression for a
+to resolve conflicts first. The regular expression for a
 conflict marker can be customised via variable
 @code{dkmisc-ConflictMarkerRe} in customisation group
 @code{dkmisc}.
