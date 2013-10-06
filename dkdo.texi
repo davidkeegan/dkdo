@@ -98,7 +98,7 @@ Foundation GNU Free Documentation Licence.
 @node Overview
 @section Overview
 
-Do List Mode facilitates maintaining a freely editable task
+Do List Mode is a major mode supporting a freely editable task
 list in a single file. It is based on org-mode, and org-mode
 features like outlining, visibility cycling, and
 lists/checkboxes are used for structuring and managing

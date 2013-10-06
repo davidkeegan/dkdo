@@ -1,4 +1,4 @@
-;;; dkdo.el --- Do List mode using some features of org-mode.
+;;; dkdo.el --- Do List major mode based on org-mode.
 
 ;; Copyright: (c) David Keegan 2010-2013.
 ;; Licence: FSF GPLv3 (see LICENCE.txt).
@@ -9,12 +9,18 @@
 ;; URL: https://github.com/davidkeegan/dkdo
 
 ;;; Commentary:
-;;
-;; This is a Do List mode for a user who likes to manipulate the
-;; entries directly to adjust priorities. It uses org/outline mode to
-;; make it easy to get an overview. Urgent tasks appear near the top
-;; of the file.
-;; 
+
+;; Do List Mode is a major mode supporting a freely editable task list
+;; in a single file. It is based on org-mode, and org-mode features
+;; like outlining, visibility cycling, and lists/checkboxes are used
+;; for structuring and managing tasks. However in so far as it
+;; maintains the Do List in a separate document and allows for
+;; continuous re-ordering of tasks to reflect changing priorities, it
+;; provides an alternative to org mode's TODO items feature.
+
+;; It keeps urgent tasks near the top of the file to maximise
+;; visibility and supports deferred and recurring tasks.
+
 ;;; Code:
 
 (require 'dkmisc)
