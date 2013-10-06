@@ -1,7 +1,7 @@
 ;;; dkdo.el --- Do List major mode based on org-mode.
 
 ;; Copyright: (c) David Keegan 2010-2013.
-;; Licence: FSF GPLv3 (see LICENCE.txt).
+;; Licence: FSF GPLv3.
 ;; Author: David Keegan <dksw@eircom.net>
 ;; Version: 1.0
 ;; Package-Requires: ((dkmisc "0.5") (emacs "24.1"))
