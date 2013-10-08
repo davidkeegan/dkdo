@@ -140,7 +140,7 @@ specified interval.")
 (defvar dkdo-mode-map)
 
 ;;;###autoload
-(defun dkdo-SetCceys()
+(defun dkdo-SetCcKeys()
  "Define C-cx keys for dkdo-mode.
 To invoke add this function to dkdo-mode-hook."
  (define-key dkdo-mode-map "\C-cd" 'dkdo-TaskToDone)
