@@ -25,13 +25,6 @@
 
 (require 'dkmisc)
 
-; Eliminate compile warnings.
-(defvar org-cycle-separator-lines)
-(declare-function org-sort-entries "org")
-(declare-function org-content "org")
-(declare-function org-cycle-show-empty-lines "org")
-(declare-function hide-subtree "outline")
-
 (defconst dkdo-ModeName "Do List")
 
 ;;;###autoload
