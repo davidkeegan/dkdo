@@ -136,8 +136,11 @@ specified interval.")
 (defconst dkdo-ReCheckboxesDone
  (concat dkdo-ReCheckboxesNumericDone "\\|" dkdo-ReCheckboxesPercentDone))
 
+; Eliminate warning.
+(defvar dkdo-mode-map)
+
 ;;;###autoload
-(defun dkdo-SetCcKeys()
+(defun dkdo-SetCceys()
  "Define C-cx keys for dkdo-mode.
 To invoke add this function to dkdo-mode-hook."
  (define-key dkdo-mode-map "\C-cd" 'dkdo-TaskToDone)
