@@ -27,7 +27,6 @@
 
 ; Eliminate compile warnings.
 (defvar org-cycle-separator-lines)
-(defvar dkdo-mode-map)
 (declare-function org-sort-entries "org")
 (declare-function org-content "org")
 (declare-function org-cycle-show-empty-lines "org")
