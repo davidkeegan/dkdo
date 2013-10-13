@@ -5,7 +5,7 @@
 ;; Author: David Keegan <dksw@eircom.net>
 ;; Version: 1.0
 ;; Package-Requires: ((dkmisc "0.5") (emacs "24.1"))
-;; Keywords: dolist task
+;; Keywords: dolist task productivity
 ;; URL: https://github.com/davidkeegan/dkdo
 
 ;;; Commentary:
