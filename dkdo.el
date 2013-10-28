@@ -29,7 +29,7 @@
 
 ;;;###autoload
 (defgroup dkdo nil
- (concat dkdo-ModeName " mode Customisation.")
+ (concat dkdo-ModeName " mode.")
  :tag "dkdo"
  :group 'dk)
 
