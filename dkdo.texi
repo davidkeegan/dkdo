@@ -33,14 +33,18 @@ Foundation GNU Free Documentation Licence.
 @finalout
 @end iftex
 
+@c Keybinding, Alternative Keybinding, Command as @item.
 @macro dkcmditem{key, key2, command}
 @item @kbd{\key\}@tie{} (@kbd{\key2\}) (@code{\command\})
 @end macro
 
+@c Keybinding, Alternative Keybinding, Command.
 @macro dkcmd{key, key2, command}
 @kbd{\key\}@tie{} (@kbd{\key2\}) (@code{\command\})
 @end macro
 
+@c Keybinding, Alternative Keybinding, Command with @kindex
+@c and @findex entries.
 @macro dkcmdidx{key, key2, command}
 @kindex \key\
 @kindex \key2\
