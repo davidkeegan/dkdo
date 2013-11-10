@@ -3,8 +3,8 @@
 ;; Copyright: (c) David Keegan 2010-2013.
 ;; Licence: FSF GPLv3.
 ;; Author: David Keegan <dksw@eircom.net>
-;; Version: 1.1
-;; Package-Requires: ((dkmisc "0.5") (emacs "24.1"))
+;; Version: 1.01
+;; Package-Requires: ((dkmisc "0.50") (emacs "24.1"))
 ;; Keywords: dolist task productivity
 ;; URL: https://github.com/davidkeegan/dkdo
 
