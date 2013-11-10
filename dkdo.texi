@@ -96,7 +96,7 @@ Foundation GNU Free Documentation Licence.
 * Overview::
 * Getting Started::
 * Known Issues::
-* History and Changes::
+* Changes::
 @end menu
 
 @node Overview
@@ -146,8 +146,8 @@ subgroup @code{dkdo}.
 All timestamps in the do list must be in ISO format
 (YYYY-MM-DD). Other formats are not supported.
 
-@node History and Changes
-@section History and Changes
+@node Changes
+@section Changes
 
 Package dkdo was written between 2010-07-23 and 2010-11-24
 to replace manual editing of a similarly structured do list
