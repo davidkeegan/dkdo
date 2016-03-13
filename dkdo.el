@@ -1,4 +1,4 @@
-;;; dkdo.el --- Do List major mode based on org-mode.
+;; dkdo.el --- Do List major mode based on org-mode.
 
 ;; Copyright: (c) David Keegan 2010-2013.
 ;; Licence: FSF GPLv3.
@@ -88,6 +88,12 @@ zero, `dkdo-BufferRefresh' is called periodically at the
 specified interval.")
  :tag "dkdo-RefreshSeconds"
  :type '(integer))
+
+(defcustom dkdo-IcalLocation-function nil
+"A function to transform the calendar location field.
+Should take one string arg and return a string."
+ :tag "dkdo-IcalLocation-function"
+ :type '(function))
 
 (defcustom dkdo-mode-hook nil
  (concat "Hooks called on entering " dkdo-ModeName ".")
@@ -1127,5 +1133,34 @@ section NOW, and when `dkdo-AutoFinishCheckedTasks' is t."
     (dkdo-ToTaskEnd)
     (insert dkdo-PrefixTask "\n")
     (forward-char -1)))))
+
+(defun dkdo-IcalEventToDoList()
+ "Extracts event from current buffer to task in do list."
+ (let*
+  ((Event (dkmisc-IcalGetEvent))
+   (Task (dkdo-IcalEventToTaskString Event)))
+
+  (dkdo-Edit nil)
+  (dkdo-ToFirstTaskPosition 'dkdo-Later)
+  (dkdo-TaskInsertText Task (point))))
+  
+(defun dkdo-IcalEventToTaskString(Event)
+ "Converts the calendar event to a task string.
+  Event is a list (DTSTART DTEND SUMMARY LOCATION) as
+  returned by dkmisc-IcalGetEvent()."
+ (let*
+  ((Start (dkmisc-TimeParse (pop Event) t))
+   (End (dkmisc-TimeParse (pop Event) t))
+   (DurationSec (- End Start))
+   (Summary (pop Event))
+   (Location (pop Event)))
+  (if (not (null dkdo-IcalLocation-function))
+   (setq Location
+    (apply dkdo-IcalLocation-function (list Location))))
+  (format "** %s Cal: %s %s %s.\n"
+   (substring (dkmisc-DateTimeToText Start) 0 -3)
+   Summary
+   Location
+   (dkmisc-SecondsToShiftSingleUnit DurationSec))))
 
 (provide 'dkdo)
