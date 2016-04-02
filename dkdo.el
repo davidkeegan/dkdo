@@ -1137,20 +1137,27 @@ section NOW, and when `dkdo-AutoFinishCheckedTasks' is t."
 (defun dkdo-IcalEventToDoList()
  "Extracts event from current buffer to task in do list."
  (let*
-  ((Event (dkmisc-IcalGetEvent))
-   (Task (dkdo-IcalEventToTaskString Event)))
+  ((Task (dkdo-IcalBufferToTaskString)))
 
   (dkdo-Edit nil)
   (dkdo-ToFirstTaskPosition 'dkdo-Later)
   (dkdo-TaskInsertText Task (point))))
+
+(defun dkdo-IcalBufferToTaskString()
+ "Extracts event from current buffer and converts to dolist task."
+  
+ (let*
+  ((Event (dkmisc-IcalGetEvent)))
+  (dkdo-IcalEventToTaskString Event)))
   
 (defun dkdo-IcalEventToTaskString(Event)
  "Converts the calendar event to a task string.
   Event is a list (DTSTART DTEND SUMMARY LOCATION) as
   returned by dkmisc-IcalGetEvent()."
  (let*
-  ((Start (dkmisc-TimeParse (pop Event) t))
-   (End (dkmisc-TimeParse (pop Event) t))
+  ; Our calendar events are local time even though they look like UST.
+  ((Start (dkmisc-TimeParseLocal (pop Event) t))
+   (End (dkmisc-TimeParseLocal (pop Event) t))
    (DurationSec (- End Start))
    (Summary (pop Event))
    (Location (pop Event)))
