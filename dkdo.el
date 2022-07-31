@@ -1,4 +1,4 @@
-;; dkdo.el --- Do List major mode based on org-mode.
+; dkdo.el --- Do List major mode based on org-mode.
 
 ;; Copyright: (c) David Keegan 2010-2013.
 ;; Licence: FSF GPLv3.
@@ -1061,6 +1061,7 @@ Assume TASKTEXT is a valid task."
  (let* ((Rv nil))
   (save-excursion
    (goto-char Point)
+   (dkdo-TaskInsertFixupInvisibleEndlines)
    (insert TaskText)
    (setq Rv (point))
 
@@ -1068,6 +1069,29 @@ Assume TASKTEXT is a valid task."
    (forward-char -1)
    (dkdo-TaskHideSubtree))
   Rv))
+
+(defun dkdo-TaskInsertFixupInvisibleEndlines()
+ "Fixes preceding invisible endlines.
+ Problem: org-mode makes trailing endlines invisible at eof,
+ resulting in a task inserted not beginning on a separate line.
+ Fix: Replace trailing invisible endlines with a single visible
+ endline."
+ (if (eobp)
+  (let* ((Deleted nil))
+   (while
+    (let*
+     ((Pos (point)) (Char (char-before Pos)))
+     (if
+      ; Preceding char is invisible endline.
+      (and
+       Char
+       (char-equal Char ?\n)
+       (invisible-p (- Pos 1)))
+      (progn
+       (delete-char -1)
+       (setq Deleted t)))))
+   ; Insert visible endline.
+   (if Deleted (insert "\n")))))
 
 (defun dkdo-TaskHideSubtree()
  "Hide the task subtree without swallowing trailing empty lines."
